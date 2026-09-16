@@ -1,0 +1,742 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORNIX — Systematic Trading Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0c0c0d;
+    --paper:#efeee9;
+    --line:#333333;
+    --line-soft:#1c1c1c;
+    --grey:#8a8a85;
+    --grey-dim:#4a4a47;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, #232324 0%, transparent 55%),
+      radial-gradient(ellipse 90% 50% at 85% 100%, #1a1a1b 0%, transparent 60%),
+      linear-gradient(160deg, #101011 0%, #0a0a0b 45%, #131314 100%);
+    background-attachment:fixed;
+    color:var(--paper);
+    font-family:'JetBrains Mono', monospace;
+    font-size:15px;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ---------- background layers ---------- */
+  #bgCanvas{
+    position:fixed;
+    inset:0;
+    width:100%; height:100%;
+    z-index:0;
+    opacity:.5;
+    pointer-events:none;
+  }
+
+  .bg-grid{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      linear-gradient(to right, var(--line-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line-soft) 1px, transparent 1px);
+    background-size:120px 120px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%, black 0%, transparent 72%);
+    mask-image:radial-gradient(ellipse 90% 70% at 50% 0%, black 0%, transparent 72%);
+    opacity:.7;
+  }
+
+  .bg-arch{
+    position:fixed;
+    top:0; left:50%;
+    width:min(1400px, 200vw);
+    transform:translateX(-50%);
+    z-index:0;
+    pointer-events:none;
+    opacity:.5;
+  }
+
+  nav, header, section, footer{
+    position:relative;
+    z-index:1;
+  }
+
+  ::selection{ background:var(--paper); color:var(--black); }
+
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:450;
+    letter-spacing:-0.01em;
+  }
+
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 40px;
+  }
+
+  a{ color:inherit; }
+
+  /* ---------- reveal ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .9s cubic-bezier(.16,.8,.3,1), transform .9s cubic-bezier(.16,.8,.3,1);
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-delay-1{ transition-delay:.08s; }
+  .reveal-delay-2{ transition-delay:.16s; }
+  .reveal-delay-3{ transition-delay:.24s; }
+  .reveal-delay-4{ transition-delay:.32s; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 40px;
+    mix-blend-mode:difference;
+  }
+  .nav-mark{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    letter-spacing:0.02em;
+  }
+  .nav-links{ display:flex; gap:34px; font-size:12.5px; align-items:center; }
+  .nav-links a{ text-decoration:none; opacity:.75; transition:opacity .3s; }
+  .nav-links a:hover{ opacity:1; }
+  .nav-cta{
+    border:1px solid #4a4a47;
+    padding:9px 18px;
+    border-radius:100px;
+    opacity:1 !important;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:background .3s, color .3s, border-color .3s;
+  }
+  .nav-cta:hover{ background:#efeee9; color:#0a0a0a; border-color:#efeee9; }
+  @media (max-width:720px){ .nav-links a:not(.nav-cta){ display:none; } }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    position:relative;
+    padding-top:120px;
+    padding-bottom:80px;
+    border-bottom:1px solid var(--line-soft);
+  }
+
+  .hero-eyebrow{
+    font-size:12.5px;
+    color:var(--grey);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:34px;
+  }
+  .hero-eyebrow::before{
+    content:'';
+    width:34px; height:1px;
+    background:var(--grey-dim);
+    display:inline-block;
+  }
+
+  .hero h1{
+    font-size:clamp(62px, 11vw, 148px);
+    line-height:0.92;
+    color:var(--paper);
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--grey);
+  }
+
+  .hero-sub{
+    margin-top:38px;
+    max-width:520px;
+    font-size:15.5px;
+    color:#c7c6c0;
+    line-height:1.75;
+  }
+
+  .hero-foot{
+    margin-top:70px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:24px;
+    border-top:1px solid var(--line-soft);
+    padding-top:26px;
+  }
+  .hero-foot-stat{ font-size:12px; color:var(--grey); }
+  .hero-foot-stat b{
+    display:block;
+    font-family:'Fraunces', serif;
+    font-size:26px;
+    font-weight:450;
+    color:var(--paper);
+    margin-bottom:4px;
+  }
+  .scroll-cue{
+    font-size:11px; color:var(--grey-dim);
+    display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue span{
+    width:1px; height:34px; background:var(--grey-dim);
+    display:inline-block;
+    animation:pulse-line 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-line{
+    0%,100%{ transform:scaleY(1); opacity:.5; }
+    50%{ transform:scaleY(.4); opacity:1; }
+  }
+
+  /* ---------- section shell ---------- */
+  section{
+    padding:130px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:40px;
+    margin-bottom:74px;
+    flex-wrap:wrap;
+  }
+  .section-num{
+    font-size:12px; color:var(--grey-dim);
+  }
+  .section-head h2{
+    font-size:clamp(34px,4.2vw,52px);
+    max-width:640px;
+  }
+  .section-note{
+    max-width:300px;
+    font-size:13px;
+    color:var(--grey);
+    line-height:1.7;
+    text-align:right;
+  }
+  @media (max-width:720px){ .section-note{ text-align:left; } }
+
+  /* ---------- markets strip ---------- */
+  .ticker{
+    border-top:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft);
+    padding:22px 0;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  .ticker-track{
+    display:inline-flex;
+    gap:60px;
+    animation:ticker 34s linear infinite;
+    font-size:13px;
+    color:var(--grey);
+  }
+  .ticker-track span b{ color:var(--paper); margin-right:8px; }
+  @keyframes ticker{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* ---------- philosophy / grid text ---------- */
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:70px;
+  }
+  @media (max-width:800px){ .grid-2{ grid-template-columns:1fr; gap:44px; } }
+
+  .lede{
+    font-family:'Fraunces', serif;
+    font-size:26px;
+    font-weight:400;
+    line-height:1.5;
+    color:var(--paper);
+  }
+  .body-copy{
+    font-size:14px;
+    color:#b9b8b2;
+    line-height:1.85;
+  }
+  .body-copy + .body-copy{ margin-top:16px; }
+
+  .pillar-list{ margin-top:40px; }
+  .pillar{
+    display:grid;
+    grid-template-columns:70px 1fr;
+    gap:24px;
+    padding:26px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .pillar:last-child{ border-bottom:1px solid var(--line-soft); }
+  .pillar-index{ font-size:12px; color:var(--grey-dim); padding-top:4px; }
+  .pillar h3{ font-size:19px; font-weight:450; margin-bottom:8px; }
+  .pillar p{ font-size:13.5px; color:var(--grey); line-height:1.7; max-width:480px; }
+
+  /* ---------- results ---------- */
+  .strategy-card{
+    border:1px solid var(--line-soft);
+    padding:44px;
+    margin-bottom:1px;
+  }
+  .strategy-card + .strategy-card{ border-top:none; }
+  .strategy-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:30px;
+  }
+  .strategy-name{ font-family:'Fraunces', serif; font-size:26px; }
+  .strategy-tag{
+    font-size:11.5px;
+    color:var(--grey);
+    border:1px solid var(--line);
+    padding:5px 12px;
+    border-radius:100px;
+  }
+  .stat-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:30px;
+  }
+  @media (max-width:720px){ .stat-row{ grid-template-columns:repeat(2,1fr); } }
+  .stat-label{ font-size:11px; color:var(--grey-dim); margin-bottom:8px; }
+  .stat-value{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    font-weight:450;
+  }
+  .stat-value.pos{ color:var(--paper); }
+  .stat-value.neg{ color:var(--grey); }
+  .strategy-desc{
+    margin-top:30px;
+    font-size:13px;
+    color:var(--grey);
+    line-height:1.8;
+    max-width:640px;
+    border-top:1px solid var(--line-soft);
+    padding-top:24px;
+  }
+
+  /* ---------- equity bars (css only viz) ---------- */
+  .bars{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    height:120px;
+    margin-top:30px;
+  }
+  .bar{
+    flex:1;
+    background:var(--grey-dim);
+    position:relative;
+    transition:transform 1.1s cubic-bezier(.16,.8,.3,1);
+    transform:scaleY(0);
+    transform-origin:bottom;
+  }
+  .bar.in{ transform:scaleY(1); }
+  .bar.pos{ background:var(--paper); }
+  .bar-label{
+    position:absolute; bottom:-24px; left:0; right:0;
+    text-align:center; font-size:10px; color:var(--grey-dim);
+  }
+
+  /* ---------- process steps ---------- */
+  .steps{ counter-reset:step; }
+  .step{
+    counter-increment:step;
+    display:grid;
+    grid-template-columns:90px 1fr;
+    gap:30px;
+    padding:34px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .steps .step:last-child{ border-bottom:1px solid var(--line-soft); }
+  .step::before{
+    content:counter(step, decimal-leading-zero);
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    color:var(--grey-dim);
+  }
+  .step h3{ font-size:18px; font-weight:450; margin-bottom:8px; }
+  .step p{ font-size:13.5px; color:var(--grey); max-width:520px; line-height:1.7; }
+
+  /* ---------- disclosure ---------- */
+  .disclosure{
+    font-size:12px;
+    color:var(--grey-dim);
+    line-height:1.8;
+    max-width:700px;
+    border-left:1px solid var(--line);
+    padding-left:24px;
+  }
+
+  /* ---------- footer / cta ---------- */
+  footer{ padding:100px 0 60px; }
+  .cta-line{
+    font-family:'Fraunces', serif;
+    font-size:clamp(32px,5vw,58px);
+    line-height:1.15;
+    max-width:800px;
+    margin-bottom:60px;
+  }
+  .foot-row{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:24px;
+    border-top:1px solid var(--line-soft);
+    padding-top:30px;
+    font-size:12px;
+    color:var(--grey-dim);
+  }
+  .foot-row a{ text-decoration:none; color:var(--grey); }
+  .foot-row a:hover{ color:var(--paper); }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 30px;
+    border:1px solid var(--paper);
+    border-radius:100px;
+    color:var(--paper);
+    text-decoration:none;
+    font-size:13px;
+    transition:background .35s, color .35s;
+  }
+  .btn:hover{ background:var(--paper); color:#0a0a0a; }
+
+  .explore-cta{
+    padding:110px 0 60px;
+    text-align:center;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .explore-cta p{
+    font-family:'Fraunces', serif;
+    font-size:clamp(26px,3.4vw,38px);
+    margin-bottom:34px;
+    color:var(--grey);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<svg class="bg-arch" viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMin meet">
+  <path d="M -100 900 C -100 300, 300 0, 700 0 C 1100 0, 1500 300, 1500 900"
+        fill="none" stroke="#232323" stroke-width="1"/>
+  <path d="M 0 900 C 0 380, 340 60, 700 60 C 1060 60, 1400 380, 1400 900"
+        fill="none" stroke="#1a1a1a" stroke-width="1"/>
+  <path d="M 120 900 C 120 460, 400 140, 700 140 C 1000 140, 1280 460, 1280 900"
+        fill="none" stroke="#151515" stroke-width="1"/>
+</svg>
+
+<nav>
+  <div class="nav-mark">FORNIX</div>
+  <div class="nav-links">
+    <a href="#philosophy">Philosophy</a>
+    <a href="#results">Results</a>
+    <a href="#markets">Markets</a>
+    <a href="#process">Process</a>
+    <a href="strategies.html" class="nav-cta">Explore more strategies →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow reveal">SYSTEMATIC TRADING RESEARCH — ESTABLISHED ON DATA, NOT OPINION</div>
+    <h1 class="reveal reveal-delay-1">The arch<br>that holds<br><em>the trade.</em></h1>
+    <p class="hero-sub reveal reveal-delay-2">A fornix is the structure that bears the load above an opening — the quiet arithmetic behind every arch. Same idea here: strategies built on opening-range structure, tested across years of data, before a single rupee or point is risked.</p>
+
+    <div class="hero-foot">
+      <div class="hero-foot-stat reveal reveal-delay-3">
+        <b>5+ yrs</b>
+        Backtested across 2021–2026
+      </div>
+      <div class="hero-foot-stat reveal reveal-delay-3">
+        <b>6</b>
+        Strategy variants in live research
+      </div>
+      <div class="hero-foot-stat reveal reveal-delay-3">
+        <b>NQ · US100 · Nifty</b>
+        Markets covered
+      </div>
+      <div class="scroll-cue reveal reveal-delay-4"><span></span>SCROLL</div>
+    </div>
+  </div>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<section id="philosophy">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-num">01 — PHILOSOPHY</div>
+        <h2>Every setup earns its place with a spreadsheet, not a feeling.</h2>
+      </div>
+      <div class="section-note">No forward promises. Every figure on this page is a historical backtest result, shown to explain method — not to solicit trades.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lede">Markets don't reward conviction. They reward the trader who already knows what happens across a thousand version of the same morning.</p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <p class="body-copy">FORNIX strategies begin with a single, mechanical idea — an opening range break, a fixed stop, a fixed target — and are then run against years of price data before they're allowed anywhere near a live chart.</p>
+        <p class="body-copy">The work leans on ICT-derived market-structure concepts, applied to opening ranges on index futures and Indian derivatives, then stress-tested month by month, year by year, side by side.</p>
+      </div>
+    </div>
+
+    <div class="pillar-list">
+      <div class="pillar reveal">
+        <div class="pillar-index">A</div>
+        <div>
+          <h3>Rules before results</h3>
+          <p>Entry, stop, and target are fixed before the backtest runs — never adjusted afterward to flatter the equity curve.</p>
+        </div>
+      </div>
+      <div class="pillar reveal reveal-delay-1">
+        <div class="pillar-index">B</div>
+        <div>
+          <h3>Seasonality over single years</h3>
+          <p>Every strategy is pooled across five-plus years to separate a genuine calendar-month edge from one lucky season.</p>
+        </div>
+      </div>
+      <div class="pillar reveal reveal-delay-2">
+        <div class="pillar-index">C</div>
+        <div>
+          <h3>Buy and sell, tested apart</h3>
+          <p>Long and short variants are backtested independently, then compared head-to-head — most setups favor one side of the market.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="results">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-num">02 — RESULTS</div>
+        <h2>Strategy backtests, in points and probability.</h2>
+      </div>
+      <div class="section-note">Figures are historical, 2021–2025 pooled unless stated. Past performance on backtested data does not guarantee future results.</div>
+    </div>
+
+    <div class="strategy-card reveal">
+      <div class="strategy-top">
+        <div class="strategy-name">NQ 9:27 Opening — Buy</div>
+        <div class="strategy-tag">NASDAQ FUTURES · 5YR</div>
+      </div>
+      <div class="stat-row">
+        <div><div class="stat-label">NET POINTS (5YR)</div><div class="stat-value pos">+7,595.9</div></div>
+        <div><div class="stat-label">BEST YEAR</div><div class="stat-value pos">+1,580.9</div></div>
+        <div><div class="stat-label">PROFIT FACTOR</div><div class="stat-value pos">1.17–1.31</div></div>
+        <div><div class="stat-label">SEASONAL (SAINT MODE)</div><div class="stat-value pos">+3,643.7</div></div>
+      </div>
+      <div class="bars">
+        <div class="bar pos" style="height:63%"><div class="bar-label">'21</div></div>
+        <div class="bar pos" style="height:40%"><div class="bar-label">'22</div></div>
+        <div class="bar pos" style="height:100%"><div class="bar-label">'23</div></div>
+        <div class="bar pos" style="height:45%"><div class="bar-label">'24</div></div>
+        <div class="bar pos" style="height:38%"><div class="bar-label">'25</div></div>
+      </div>
+      <p class="strategy-desc">Buy at 9:27 AM, 50pt stop, 100pt target, trailed to breakeven after +50pts, EOD exit if neither hit. Five-year net sits at +7,595.9 points, with the seasonality filter (skipping historically weak pooled months: Feb, May, Jul, Sep, Nov, Dec) pushing it further to +3,643.7 points at a materially lower drawdown per-window — the base rule already carries an edge, and the calendar filter sharpens it.</p>
+    </div>
+
+    <div class="strategy-card reveal">
+      <div class="strategy-top">
+        <div class="strategy-name">NQ 9:27 Opening — Sell</div>
+        <div class="strategy-tag">NASDAQ FUTURES · 5YR</div>
+      </div>
+      <div class="stat-row">
+        <div><div class="stat-label">NET POINTS (5YR)</div><div class="stat-value pos">+2,140.6</div></div>
+        <div><div class="stat-label">BEST YEAR</div><div class="stat-value pos">2024, +1,288.6</div></div>
+        <div><div class="stat-label">WORST YEAR</div><div class="stat-value neg">2023, −2,756.1</div></div>
+        <div><div class="stat-label">VS BUY SIDE</div><div class="stat-value neg">Smaller edge, more variance</div></div>
+      </div>
+      <p class="strategy-desc">Same mechanics, mirrored to the short side. Across 2021–2025 the sell variant is net positive but carries a rougher path than buy — a single sharp drawdown year (2023) offsets otherwise solid results. Switching sides by calendar month per the pooled seasonality plan (rather than running one side all year) nets +5,183.1 points over the same five years.</p>
+    </div>
+
+    <div class="strategy-card reveal">
+      <div class="strategy-top">
+        <div class="strategy-name">US100 Opening Range Breakout</div>
+        <div class="strategy-tag">NASDAQ-100 · MULTI-YEAR · BUY & SELL</div>
+      </div>
+      <div class="stat-row">
+        <div><div class="stat-label">COVERAGE</div><div class="stat-value pos">2021–2026</div></div>
+        <div><div class="stat-label">VARIANTS</div><div class="stat-value pos">Buy + Sell</div></div>
+        <div><div class="stat-label">ANALYSIS</div><div class="stat-value pos">YoY + Seasonality</div></div>
+        <div><div class="stat-label">SCORING</div><div class="stat-value pos">Suitability-ranked</div></div>
+      </div>
+      <p class="strategy-desc">A multi-year opening-range framework, reported year-over-year with calendar-month seasonality and a suitability score per configuration — built to show where the strategy is structurally strong versus where it's merely surviving.</p>
+    </div>
+  </div>
+</section>
+
+<section id="markets">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-num">03 — THE MARKETS</div>
+        <h2>Context, for anyone reading the numbers cold.</h2>
+      </div>
+      <div class="section-note">A short primer for visitors newer to derivatives and index trading.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="reveal">
+        <h3 style="font-size:20px; margin-bottom:14px;">Opening range</h3>
+        <p class="body-copy">The high and low set in the first minutes after a session opens. It's one of the earliest structural clues a market gives about the day — a breakout above or below it is often traded as a signal that one side has taken control, though it fails often enough that risk has to be fixed in advance.</p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <h3 style="font-size:20px; margin-bottom:14px;">Index futures (NQ / US100)</h3>
+        <p class="body-copy">Contracts that track the Nasdaq-100 ahead of and beyond regular trading hours. They let a strategy be tested and traded around a single number — points gained or lost — independent of any one underlying stock.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:60px;">
+      <div class="reveal">
+        <h3 style="font-size:20px; margin-bottom:14px;">Nifty & BankNifty</h3>
+        <p class="body-copy">India's own benchmark and banking indices, and the most liquid derivatives on the NSE. Structure here behaves differently to US indices — expiry mechanics, FII/DII flow, and local session timing all shift how an opening-range idea performs.</p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <h3 style="font-size:20px; margin-bottom:14px;">Profit factor & drawdown</h3>
+        <p class="body-copy">Profit factor is gross profit divided by gross loss — above 1 means the strategy made more than it lost. Drawdown is the largest peak-to-trough dip an equity curve takes on the way there. Neither number means much without the other.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-num">04 — PROCESS</div>
+        <h2>How a strategy gets from idea to report.</h2>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div>
+          <h3>Define the rule</h3>
+          <p>Entry trigger, stop distance, target, and any trail logic are written down before a single backtest runs.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-1">
+        <div>
+          <h3>Run it across years, not weeks</h3>
+          <p>Every trade log is rebuilt year by year — 2021 through 2025 or 2026 — so no single regime can flatter the result.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div>
+          <h3>Pool the seasonality</h3>
+          <p>Calendar-month performance is pooled across all years to separate a repeatable pattern from a one-off run.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div>
+          <h3>Compare, don't cherry-pick</h3>
+          <p>Buy is measured against sell, year against year, aggressive against seasonal-filtered — the weaker side is reported too.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclosure reveal" style="margin-top:60px;">
+      Educational and research content only. Backtested performance is historical and does not account for slippage, execution variance, or changing market regimes. Nothing on this page is investment advice or a solicitation to trade.
+    </div>
+  </div>
+</section>
+
+<section class="explore-cta">
+  <div class="wrap">
+    <p class="reveal">Curious what else is in the lab?</p>
+    <a href="strategies.html" class="btn reveal reveal-delay-1">Explore more strategies →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="cta-line reveal">Want the full report behind any of these numbers?</p>
+    <div class="foot-row">
+      <div>FORNIX — Systematic Trading Research</div>
+      <div><a href="#">Contact</a> &nbsp;·&nbsp; <a href="#">Reports archive</a> &nbsp;·&nbsp; © 2026</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // scroll reveal
+  const revealEls = document.querySelectorAll('.reveal, .bar');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el=> io.observe(el));
+
+  // ticker content
+  const symbols = [
+    ['NQ', '+7,595.9 pts / 5yr'],
+    ['US100 ORB', 'Buy & Sell · 2021–2026'],
+    ['NIFTY 50', 'ICT / SMC framework'],
+    ['BANKNIFTY', 'NSE derivatives'],
+    ['B2 STRATEGY', '100pt TP · 50pt SL'],
+    ['S2 SHORT', '+31,140 net / 5yr'],
+    ['GOLD', 'Global index watch'],
+    ['DAX / US30', 'Global index watch'],
+  ];
+  const track = document.getElementById('tickerTrack');
+  const build = () => symbols.map(([a,b])=>`<span><b>${a}</b>${b}</span>`).join('');
+  track.innerHTML = build() + build();
+</script>
+
+</body>
+</html>
