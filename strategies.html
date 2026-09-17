@@ -1,0 +1,2770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORNIX — All Strategies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0c0c0d;
+    --paper:#efeee9;
+    --line:#333333;
+    --line-soft:#1c1c1c;
+    --grey:#8a8a85;
+    --grey-dim:#4a4a47;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, #232324 0%, transparent 55%),
+      radial-gradient(ellipse 90% 50% at 85% 100%, #1a1a1b 0%, transparent 60%),
+      linear-gradient(160deg, #101011 0%, #0a0a0b 45%, #131314 100%);
+    background-attachment:fixed;
+    color:var(--paper);
+    font-family:'JetBrains Mono', monospace;
+    font-size:15px;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection{ background:var(--paper); color:var(--black); }
+
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:450;
+    letter-spacing:-0.01em;
+  }
+
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 40px; }
+  a{ color:inherit; }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .9s cubic-bezier(.16,.8,.3,1), transform .9s cubic-bezier(.16,.8,.3,1);
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-delay-1{ transition-delay:.08s; }
+  .reveal-delay-2{ transition-delay:.16s; }
+  .reveal-delay-3{ transition-delay:.24s; }
+  @media (prefers-reduced-motion: reduce){ .reveal{ opacity:1; transform:none; transition:none; } }
+
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:26px 40px;
+    mix-blend-mode:difference;
+  }
+  .nav-mark{ font-family:'Fraunces', serif; font-size:20px; letter-spacing:0.02em; text-decoration:none; }
+  .nav-links{ display:flex; gap:34px; font-size:12.5px; align-items:center; }
+  .nav-links a{ text-decoration:none; opacity:.75; transition:opacity .3s; }
+  .nav-links a:hover{ opacity:1; }
+  .nav-cta{
+    border:1px solid #4a4a47;
+    padding:9px 18px;
+    border-radius:100px;
+    opacity:1 !important;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:background .3s, color .3s, border-color .3s;
+  }
+  .nav-cta:hover{ background:#efeee9; color:#0a0a0a; border-color:#efeee9; }
+  @media (max-width:720px){ .nav-links a:not(.nav-cta){ display:none; } }
+
+  main{ position:relative; z-index:1; }
+
+  .page-hero{
+    padding:170px 0 90px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .page-eyebrow{
+    font-size:12.5px; color:var(--grey);
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:26px;
+  }
+  .page-eyebrow::before{ content:''; width:34px; height:1px; background:var(--grey-dim); display:inline-block; }
+  .page-hero h1{
+    font-size:clamp(42px, 6.4vw, 78px);
+    line-height:1.02;
+    max-width:820px;
+  }
+  .page-hero p{
+    margin-top:26px;
+    max-width:560px;
+    font-size:15px;
+    color:#c7c6c0;
+    line-height:1.75;
+  }
+  .back-link{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; color:var(--grey);
+    text-decoration:none;
+    margin-bottom:40px;
+    transition:color .3s;
+  }
+  .back-link:hover{ color:var(--paper); }
+
+  .cat-block{
+    padding:100px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .cat-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:30px; margin-bottom:54px; flex-wrap:wrap;
+  }
+  .cat-num{ font-size:12px; color:var(--grey-dim); margin-bottom:10px; }
+  .cat-head h2{ font-size:clamp(28px,3.4vw,42px); }
+  .cat-note{ max-width:280px; font-size:13px; color:var(--grey); line-height:1.7; text-align:right; }
+  @media (max-width:720px){ .cat-note{ text-align:left; } }
+
+  .strat-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line-soft);
+    border:1px solid var(--line-soft);
+  }
+  @media (max-width:900px){ .strat-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .strat-grid{ grid-template-columns:1fr; } }
+
+  .strat-card{
+    background:#0a0a0b;
+    padding:34px 30px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    min-height:230px;
+    transition:background .35s;
+  }
+  .strat-card:hover{ background:#141415; }
+  .strat-status{
+    font-size:10.5px;
+    color:var(--grey-dim);
+    letter-spacing:.02em;
+  }
+  .strat-status.live{ color:#c7c6c0; }
+  .strat-card h3{
+    font-size:20px;
+    font-weight:450;
+  }
+  .strat-card p{
+    font-size:12.5px;
+    color:var(--grey);
+    line-height:1.7;
+    flex-grow:1;
+  }
+  .strat-meta{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:11px; color:var(--grey-dim);
+    border-top:1px solid var(--line-soft);
+    padding-top:14px;
+    margin-top:auto;
+  }
+
+  .search-wrap{
+    margin-top:46px;
+    max-width:560px;
+  }
+  .search-box{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:16px 24px;
+    transition:border-color .3s, background .3s;
+  }
+  .search-box:focus-within{
+    border-color:var(--paper);
+    background:rgba(239,238,233,0.03);
+  }
+  .search-box svg{ flex-shrink:0; opacity:.6; }
+  .search-box input{
+    flex:1;
+    background:none;
+    border:none;
+    outline:none;
+    color:var(--paper);
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;
+  }
+  .search-box input::placeholder{ color:var(--grey-dim); }
+  .search-box .search-clear{
+    font-size:11px;
+    color:var(--grey-dim);
+    cursor:pointer;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s;
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:5px 12px;
+  }
+  .search-box .search-clear.show{ opacity:1; pointer-events:auto; }
+  .search-box .search-clear:hover{ color:var(--paper); border-color:var(--paper); }
+  .search-hint{
+    margin-top:12px;
+    font-size:11.5px;
+    color:var(--grey-dim);
+  }
+  .search-count{
+    margin-top:12px;
+    font-size:11.5px;
+    color:var(--grey);
+    display:none;
+  }
+  .search-count.show{ display:block; }
+
+  .strat-card{ display:flex; cursor:pointer; }
+  .strat-card:focus-visible{ outline:1px solid var(--paper); outline-offset:-1px; }
+  .strat-card-open{
+    margin-top:4px;
+    font-size:11px;
+    color:var(--grey-dim);
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:color .3s, gap .3s;
+  }
+  .strat-card:hover .strat-card-open{ color:var(--paper); gap:9px; }
+  .strat-card.hidden{ display:none; }
+  .cat-block.hidden{ display:none; }
+
+  .no-results{
+    display:none;
+    padding:100px 0;
+    text-align:center;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .no-results.show{ display:block; }
+  .no-results p.big{
+    font-family:'Fraunces', serif;
+    font-size:clamp(22px,3vw,30px);
+    color:var(--grey);
+    margin-bottom:14px;
+  }
+  .no-results p.small{
+    font-size:13px;
+    color:var(--grey-dim);
+  }
+
+  mark{
+    background:none;
+    color:var(--paper);
+    text-decoration:underline;
+    text-decoration-color:var(--grey-dim);
+    text-underline-offset:3px;
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:16px 30px; border:1px solid var(--paper); border-radius:100px;
+    color:var(--paper); text-decoration:none; font-size:13px;
+    transition:background .35s, color .35s;
+  }
+  .btn:hover{ background:var(--paper); color:#0a0a0a; }
+
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(6,6,7,0.78);
+    backdrop-filter:blur(6px);
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:70px 24px;
+    overflow-y:auto;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+
+  .modal-panel{
+    background:#0d0d0e;
+    border:1px solid var(--line);
+    max-width:760px;
+    width:100%;
+    padding:52px;
+    position:relative;
+    transform:translateY(18px);
+    transition:transform .35s cubic-bezier(.16,.8,.3,1);
+  }
+  .modal-overlay.show .modal-panel{ transform:translateY(0); }
+  @media (max-width:640px){ .modal-panel{ padding:34px 24px; } }
+
+  .modal-close{
+    position:absolute; top:24px; right:24px;
+    width:34px; height:34px;
+    border:1px solid var(--line);
+    border-radius:100px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--grey);
+    cursor:pointer;
+    transition:color .3s, border-color .3s;
+    background:none;
+    font-family:inherit;
+    font-size:16px;
+  }
+  .modal-close:hover{ color:var(--paper); border-color:var(--paper); }
+
+  .modal-status{
+    font-size:11px;
+    color:var(--grey-dim);
+    letter-spacing:.02em;
+    margin-bottom:16px;
+  }
+  .modal-status.live{ color:var(--grey); }
+
+  .modal-title{
+    font-size:clamp(26px,3.6vw,36px);
+    margin-bottom:14px;
+    padding-right:50px;
+  }
+  .modal-desc{
+    font-size:13.5px;
+    color:var(--grey);
+    line-height:1.75;
+    margin-bottom:28px;
+  }
+  .modal-meta{
+    display:flex; gap:24px; flex-wrap:wrap;
+    font-size:11.5px; color:var(--grey-dim);
+    border-top:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft);
+    padding:16px 0;
+    margin-bottom:36px;
+  }
+  .modal-meta span b{ color:var(--grey); font-weight:normal; }
+
+  .strat-diagram{
+    margin-bottom:32px;
+    border:1px solid var(--line-soft);
+    background:#0a0a0b;
+    padding:16px 18px 12px;
+  }
+  .strat-diagram-label{
+    font-size:10.5px;
+    letter-spacing:.06em;
+    color:var(--grey-dim);
+    margin-bottom:10px;
+  }
+  .strat-diagram svg{ display:block; width:100%; height:auto; }
+
+  .modal-rules{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:36px;
+  }
+  @media (max-width:640px){ .modal-rules{ grid-template-columns:1fr; gap:30px; } }
+
+  .rules-col h4{
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:var(--grey-dim);
+    margin-bottom:16px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .rules-col.entry h4{ color:#c7c6c0; }
+  .rules-col ul{ list-style:none; }
+  .rules-col li{
+    font-size:13px;
+    color:var(--grey);
+    line-height:1.6;
+    padding:10px 0 10px 20px;
+    position:relative;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .rules-col li:last-child{ border-bottom:none; }
+  .rules-col li::before{
+    content:'—';
+    position:absolute;
+    left:0;
+    color:var(--grey-dim);
+  }
+
+  .modal-note{
+    margin-top:30px;
+    font-size:12px;
+    color:var(--grey-dim);
+    line-height:1.7;
+    border-left:1px solid var(--line);
+    padding-left:18px;
+  }
+
+  .premium-lock{
+    text-align:center;
+    padding:44px 20px;
+    border:1px dashed var(--line);
+  }
+  .premium-lock-icon{
+    width:44px; height:44px;
+    border-radius:100px;
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 20px;
+    color:var(--grey);
+  }
+  .premium-lock-title{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    color:var(--paper);
+    margin-bottom:10px;
+  }
+  .premium-lock-desc{
+    font-size:13px;
+    color:var(--grey);
+    max-width:420px;
+    margin:0 auto;
+    line-height:1.7;
+  }
+
+  .strat-premium-tag{
+    position:absolute;
+    top:34px; right:30px;
+    font-size:9.5px;
+    letter-spacing:.06em;
+    color:#0a0a0a;
+    background:var(--paper);
+    padding:4px 9px;
+    border-radius:100px;
+  }
+  .strat-card{ position:relative; }
+
+
+  footer{ padding:90px 0 60px; }
+  .foot-row{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px;
+    border-top:1px solid var(--line-soft); padding-top:30px;
+    font-size:12px; color:var(--grey-dim);
+  }
+  .foot-row a{ text-decoration:none; color:var(--grey); }
+  .foot-row a:hover{ color:var(--paper); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-mark">FORNIX</a>
+  <div class="nav-links">
+    <a href="index.html#results">Home results</a>
+    <a href="index.html#markets">Markets</a>
+    <a href="index.html" class="nav-cta">← Back home</a>
+  </div>
+</nav>
+
+<main>
+  <header class="page-hero">
+    <div class="wrap">
+      <a href="index.html" class="back-link reveal">← Back to FORNIX</a>
+      <div class="page-eyebrow reveal reveal-delay-1">THE FULL LIBRARY — EVERY STRATEGY, ORGANISED BY APPROACH</div>
+      <h1 class="reveal reveal-delay-2">All strategies, organised by how they read the market.</h1>
+      <p class="reveal reveal-delay-3">Opening-range work is only one lane. Below is the complete library — price action and chart patterns, candlesticks, EMA and indicator systems, market structure, and multi-factor confluence setups.</p>
+
+      <div class="search-wrap reveal reveal-delay-3">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="strategySearch" placeholder="Search strategies — try “ema”, “head and shoulder”, “opening range”…" autocomplete="off">
+          <span class="search-clear" id="searchClear">Clear</span>
+        </div>
+        <div class="search-hint" id="searchHint">Searches strategy names, descriptions and tags across every category.</div>
+        <div class="search-count" id="searchCount"></div>
+      </div>
+    </div>
+  </header>
+
+  <div id="categoriesRoot"></div>
+
+  <div class="wrap">
+    <div class="no-results" id="noResults">
+      <p class="big">No strategies match that search.</p>
+      <p class="small">Try “ema”, “breakout”, “pattern”, “sweep”, or clear the search to see everything.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div style="margin-bottom:50px;">
+      <a href="index.html" class="btn reveal">← Back to FORNIX</a>
+    </div>
+    <div class="foot-row">
+      <div>FORNIX — Systematic Trading Research</div>
+      <div><a href="#">Contact</a> &nbsp;·&nbsp; <a href="#">Reports archive</a> &nbsp;·&nbsp; © 2026</div>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-panel" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div class="modal-status" id="modalStatus"></div>
+    <h3 class="modal-title" id="modalTitle"></h3>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-meta" id="modalMeta"></div>
+    <div class="strat-diagram">
+      <div class="strat-diagram-label">STRUCTURE</div>
+      <div id="modalDiagram"></div>
+    </div>
+    <div id="modalRules">
+      <div class="modal-rules">
+        <div class="rules-col entry">
+          <h4>ENTRY RULES</h4>
+          <ul id="modalEntry"></ul>
+        </div>
+        <div class="rules-col exit">
+          <h4>EXIT RULES</h4>
+          <ul id="modalExit"></ul>
+        </div>
+      </div>
+    </div>
+    <div class="modal-note" id="modalNote"></div>
+  </div>
+</div>
+
+<script>
+  // ---------- strategy data ----------
+  const STRATEGY_DATA = {
+  "strategies": {
+    "srbounce": {
+      "id": "srbounce",
+      "title": "Support & Resistance Bounce",
+      "market": "Any market",
+      "desc": "Trades a reaction off an established support or resistance zone.",
+      "entry": [
+        "Identify a significant support (long) or resistance (short) zone.",
+        "Wait for price to approach the zone.",
+        "Look for a rejection/confirmation candle at the zone.",
+        "Enter after bullish confirmation at support, or bearish confirmation at resistance."
+      ],
+      "exit": [
+        "Long stop: just below the support zone. Short stop: just above the resistance zone.",
+        "Target: the next resistance level (long) or next support level (short)."
+      ],
+      "tags": "support resistance bounce rejection zone"
+    },
+    "srbreakout": {
+      "id": "srbreakout",
+      "title": "Support/Resistance Breakout",
+      "market": "Any market",
+      "desc": "Trades a decisive break through a well-established resistance or support level.",
+      "entry": [
+        "Identify a clear resistance (long) or support (short) level.",
+        "Wait for price to close beyond that level.",
+        "Prefer a breakout backed by increased volume.",
+        "Enter on the breakout candle, or on the retest of the broken level."
+      ],
+      "exit": [
+        "Stop: below the breakout level (long) or above it (short).",
+        "Target: next resistance/support level, or a predefined R:R."
+      ],
+      "tags": "support resistance breakout volume"
+    },
+    "breakoutretest": {
+      "id": "breakoutretest",
+      "title": "Breakout + Retest",
+      "market": "Any market",
+      "desc": "One of the most reliable structures — a broken level is confirmed once it's retested and holds as new support or resistance.",
+      "entry": [
+        "Identify resistance (long) or support (short).",
+        "Wait for a decisive close beyond the level.",
+        "Wait for price to return and retest the broken level — old resistance should now act as support (and vice versa for short).",
+        "Enter on bullish (long) or bearish (short) confirmation at the retest."
+      ],
+      "exit": [
+        "Stop: below the retest low (long) or above the retest high (short).",
+        "Target: the next resistance (long) or support (short) level."
+      ],
+      "tags": "breakout retest flip level"
+    },
+    "trianglebreakout": {
+      "id": "trianglebreakout",
+      "title": "Triangle Breakout",
+      "market": "Any market",
+      "desc": "Trades the resolution of a contracting price structure — ascending, descending, or symmetrical triangle.",
+      "entry": [
+        "Identify a contracting price structure and draw both trendlines.",
+        "Wait for a decisive breakout of either trendline.",
+        "Prefer breakouts confirmed by increased volume.",
+        "Enter on the breakout candle or on a retest of the broken trendline."
+      ],
+      "exit": [
+        "Stop: inside the triangle, beyond the most recent swing.",
+        "Target: based on the triangle's height, projected from the breakout point."
+      ],
+      "tags": "triangle ascending descending symmetrical breakout"
+    },
+    "flagpennant": {
+      "id": "flagpennant",
+      "title": "Flag & Pennant",
+      "market": "Any market",
+      "desc": "Trades continuation after a sharp impulse move and a brief consolidation.",
+      "entry": [
+        "Bull flag: confirm a strong upward impulse move.",
+        "Wait for a short consolidation or shallow pullback against the impulse.",
+        "Enter on a break above the consolidation (bear flag: reverse — break below)."
+      ],
+      "exit": [
+        "Stop: below the consolidation (long) or above it (short).",
+        "Target: measured continuation, typically the length of the initial impulse leg."
+      ],
+      "tags": "flag pennant continuation impulse consolidation"
+    },
+    "headshoulders": {
+      "id": "headshoulders",
+      "title": "Head & Shoulders",
+      "market": "Any market",
+      "desc": "A classic reversal pattern — left shoulder, head, right shoulder, confirmed by a neckline break.",
+      "entry": [
+        "Confirm the left shoulder, head, and right shoulder have all formed.",
+        "Draw the neckline connecting the two reaction points between the shoulders and head.",
+        "Wait for a confirmed close beyond the neckline (down for H&S, up for inverse H&S).",
+        "Enter after the confirmed break, or on a retest of the neckline."
+      ],
+      "exit": [
+        "Stop: above the right shoulder (H&S) or below the right shoulder (inverse H&S).",
+        "Target: measured by the pattern's height, projected from the neckline break."
+      ],
+      "tags": "head and shoulders inverse neckline reversal"
+    },
+    "doubletopbottom": {
+      "id": "doubletopbottom",
+      "title": "Double Top / Double Bottom",
+      "market": "Any market",
+      "desc": "A two-touch reversal pattern confirmed once the neckline or support between the two touches breaks.",
+      "entry": [
+        "Confirm the first high (or low) forms, price pulls back, and a second high (or low) forms near the first.",
+        "Wait for the neckline (for a double top) or support (for a double bottom) to break.",
+        "Enter short on the neckline break for a double top, or long for a double bottom."
+      ],
+      "exit": [
+        "Stop: above the pattern high (double top) or below the pattern low (double bottom).",
+        "Target: the pattern's projected height from the neckline break."
+      ],
+      "tags": "double top bottom reversal neckline"
+    },
+    "tripletopbottom": {
+      "id": "tripletopbottom",
+      "title": "Triple Top / Triple Bottom",
+      "market": "Any market",
+      "desc": "The same concept as a double top/bottom, but with three tests of the level before confirmation.",
+      "entry": [
+        "Confirm three separate tests of the same resistance (triple top) or support (triple bottom) level.",
+        "Wait for the neckline/support between the tests to break, rather than trading the third touch itself."
+      ],
+      "exit": [
+        "Stop: beyond the pattern's high (triple top) or low (triple bottom).",
+        "Target: the pattern's projected height from the confirmed break."
+      ],
+      "tags": "triple top bottom reversal"
+    },
+    "wedgebreakout": {
+      "id": "wedgebreakout",
+      "title": "Wedge Breakout",
+      "market": "Any market",
+      "desc": "Trades the resolution of converging trendlines — a rising wedge (typically bearish) or falling wedge (typically bullish).",
+      "entry": [
+        "Identify converging trendlines forming a rising or falling wedge.",
+        "Wait for a breakout confirmed by a closing price beyond the wedge.",
+        "Enter on the breakout candle or on a retest of the broken trendline."
+      ],
+      "exit": [
+        "Stop: inside or just behind the wedge structure.",
+        "Target: the opposing structure or the next major level."
+      ],
+      "tags": "wedge rising falling breakout"
+    },
+    "cupandhandle": {
+      "id": "cupandhandle",
+      "title": "Cup & Handle",
+      "market": "Any market",
+      "desc": "A bullish continuation pattern — a U-shaped cup followed by a shallow handle pullback, resolved by a breakout.",
+      "entry": [
+        "Confirm a rounded, U-shaped cup has formed.",
+        "Wait for a small pullback (the handle) beneath the cup's resistance.",
+        "Enter on a confirmed break above the handle's resistance.",
+        "Inverse cup & handle (bearish): mirror the structure and enter short on a break below the handle's support."
+      ],
+      "exit": [
+        "Stop: below the handle low (long) or above the handle high (short/inverse).",
+        "Target: the cup's depth projected from the breakout point."
+      ],
+      "tags": "cup handle inverse continuation breakout"
+    },
+    "rectanglebreakout": {
+      "id": "rectanglebreakout",
+      "title": "Rectangle Breakout",
+      "market": "Any market",
+      "desc": "Trades the resolution of a sideways range bounded by clear horizontal support and resistance.",
+      "entry": [
+        "Identify a well-defined horizontal range — resistance above, support below.",
+        "Wait for a confirmed close beyond either boundary.",
+        "Enter on the breakout candle or on a retest of the broken boundary."
+      ],
+      "exit": [
+        "Stop: back inside the rectangle, beyond the broken boundary.",
+        "Target: the rectangle's height projected from the breakout point."
+      ],
+      "tags": "rectangle range breakout sideways support resistance"
+    },
+    "channelbreakout": {
+      "id": "channelbreakout",
+      "title": "Channel Breakout",
+      "market": "Any market",
+      "desc": "Trades a decisive break out of two approximately parallel trendlines that price has been oscillating between.",
+      "entry": [
+        "Identify a channel formed by two roughly parallel trendlines.",
+        "Wait for a confirmed close beyond the upper (long) or lower (short) trendline.",
+        "Enter on the breakout candle or on a retest of the broken trendline."
+      ],
+      "exit": [
+        "Stop: back inside the channel, beyond the broken trendline.",
+        "Target: predefined R:R or the channel's width projected from the breakout."
+      ],
+      "tags": "channel parallel trendline breakout"
+    },
+    "channelreversal": {
+      "id": "channelreversal",
+      "title": "Channel Reversal",
+      "market": "Any market",
+      "desc": "Fades a trending channel once momentum weakens and price breaks the opposing trendline — falling channel for longs, rising channel for shorts.",
+      "entry": [
+        "Falling channel (bullish): price approaches the lower boundary, downside momentum weakens, price breaks above the channel and the retest holds.",
+        "Rising channel (bearish): price approaches the upper boundary, upside momentum weakens, price breaks below the channel and the retest fails to reclaim it.",
+        "Enter on confirmation at the retest."
+      ],
+      "exit": [
+        "Stop: beyond the recent swing that formed the reversal.",
+        "Target: predefined R:R or the prior channel's width projected from the breakout."
+      ],
+      "tags": "channel reversal falling rising momentum"
+    },
+    "broadeningformation": {
+      "id": "broadeningformation",
+      "title": "Broadening Formation",
+      "market": "Any market",
+      "desc": "Trades the confirmed breakout of an expanding structure of progressively higher highs and lower lows.",
+      "entry": [
+        "Identify a broadening structure — swing highs rising and swing lows falling.",
+        "Wait for a confirmed breakout beyond the structure's upper or lower boundary.",
+        "Enter on the breakout candle, sizing down given the pattern's tendency toward false moves."
+      ],
+      "exit": [
+        "Stop: beyond the most recent swing inside the structure.",
+        "Target: predefined R:R, kept conservative given the pattern's volatility."
+      ],
+      "tags": "broadening formation expanding volatility"
+    },
+    "diamondpattern": {
+      "id": "diamondpattern",
+      "title": "Diamond Top / Diamond Bottom",
+      "market": "Any market",
+      "desc": "A broadening structure that contracts back down near a market extreme, resolved by a boundary break.",
+      "entry": [
+        "Diamond top: confirm expansion in volatility near a high, followed by contraction into a diamond shape, then a break of the lower boundary.",
+        "Diamond bottom: the same structure near a low, followed by a break of the upper boundary.",
+        "Enter on the confirmed breakdown (top) or breakout (bottom)."
+      ],
+      "exit": [
+        "Stop: above the recent swing high (diamond top) or below the recent swing low (diamond bottom).",
+        "Target: predefined R:R or the pattern's height projected from the break."
+      ],
+      "tags": "diamond top bottom reversal expansion contraction"
+    },
+    "roundingpattern": {
+      "id": "roundingpattern",
+      "title": "Rounding Bottom / Rounding Top",
+      "market": "Any market",
+      "desc": "A gradual, long-term reversal where the prior trend slowly loses momentum and curves into the opposite direction.",
+      "entry": [
+        "Rounding bottom: confirm the decline losing momentum, a base forming, and a sequence of higher lows into resistance.",
+        "Rounding top: confirm the uptrend losing momentum, a rounded distribution forming, and a sequence of lower highs into support.",
+        "Enter on the confirmed break of resistance (bottom) or support (top), on the breakout or a retest."
+      ],
+      "exit": [
+        "Stop: below the recent structural low (rounding bottom) or above the recent structural high (rounding top).",
+        "Target: predefined R:R or the base/distribution's height projected from the break."
+      ],
+      "tags": "rounding bottom top long-term reversal base distribution"
+    },
+    "failedbreakout": {
+      "id": "failedbreakout",
+      "title": "Failed Breakout / Fakeout",
+      "market": "Any market",
+      "desc": "Trades the reversal that follows a breakout that fails to hold, trapping breakout traders on the wrong side.",
+      "entry": [
+        "Bullish failed breakdown: price breaks support, sellers fail to sustain the move, price quickly reclaims support, and a bullish candle confirms.",
+        "Bearish failed breakout: price breaks resistance, fails to hold above it, falls back below resistance, and a bearish candle confirms.",
+        "Enter on the confirmation candle back inside the level."
+      ],
+      "exit": [
+        "Stop: beyond the failed breakout/breakdown extreme.",
+        "Target: the opposing side of the prior range, or predefined R:R."
+      ],
+      "tags": "failed breakout fakeout trap reversal"
+    },
+    "consolidationbreakout": {
+      "id": "consolidationbreakout",
+      "title": "Breakout From Consolidation",
+      "market": "Any market",
+      "desc": "A pattern-agnostic setup — trades the breakout of any tight range once volatility compresses, without requiring a named formation.",
+      "entry": [
+        "Identify a tight trading range with clearly compressed volatility.",
+        "Mark the range high and low.",
+        "Wait for a confirmed close beyond either boundary, preferring breakouts backed by increased volume.",
+        "Enter on the breakout candle or on a retest of the broken boundary."
+      ],
+      "exit": [
+        "Stop: back inside the range, beyond the broken boundary.",
+        "Target: the range's height projected from the breakout point, or predefined R:R."
+      ],
+      "tags": "consolidation compression breakout volatility range"
+    },
+    "pinbar": {
+      "id": "pinbar",
+      "title": "Pin Bar Reversal",
+      "market": "Any market",
+      "desc": "A single-candle reversal read at a key level — a long wick rejecting the level with a strong close.",
+      "entry": [
+        "Bullish: price reaches an important support level and forms a candle with a long lower wick and a relatively strong close.",
+        "Bearish: price reaches resistance and forms a candle with a long upper wick.",
+        "Enter above the confirmation candle (long) or below it (short)."
+      ],
+      "exit": [
+        "Stop: below the wick (long) or above the wick (short).",
+        "Target: the next resistance (long) or support (short) level."
+      ],
+      "tags": "pin bar reversal wick rejection"
+    },
+    "engulfing": {
+      "id": "engulfing",
+      "title": "Engulfing Candle",
+      "market": "Any market",
+      "desc": "A two-candle reversal pattern where the second candle's body fully engulfs the first.",
+      "entry": [
+        "Bullish: price is declining or reaches support, a bearish candle forms, then a following bullish candle engulfs its full body.",
+        "Bearish: reverse — price at resistance, a bullish candle forms, then a bearish candle engulfs it.",
+        "Enter above the bullish engulfing candle (long) or below the bearish engulfing candle (short)."
+      ],
+      "exit": [
+        "Stop: below the recent swing low (long) or above the recent swing high (short).",
+        "Target: the next resistance (long) or support (short) level."
+      ],
+      "tags": "engulfing candle bullish bearish reversal"
+    },
+    "insidebargeneric": {
+      "id": "insidebargeneric",
+      "title": "Inside Bar Breakout",
+      "market": "Any market",
+      "desc": "Trades the breakout of a compression candle sitting entirely inside the prior ('mother') candle's range.",
+      "entry": [
+        "Identify a large mother candle.",
+        "Confirm the following candle's high and low remain fully inside the mother candle's range.",
+        "Wait for a breakout of the inside bar's range.",
+        "Enter in the direction of the breakout."
+      ],
+      "exit": [
+        "Stop: on the opposite side of the inside-bar structure.",
+        "Target: the next meaningful price level."
+      ],
+      "tags": "inside bar mother candle compression breakout"
+    },
+    "morningeveningstar": {
+      "id": "morningeveningstar",
+      "title": "Morning Star / Evening Star",
+      "market": "Any market",
+      "desc": "A three-candle reversal pattern marking exhaustion of the prior trend.",
+      "entry": [
+        "Morning Star (bullish): confirm a downtrend, a strong bearish candle, a small-bodied middle candle, then a strong bullish candle.",
+        "Evening Star (bearish): reverse — uptrend, strong bullish candle, small middle candle, strong bearish candle.",
+        "Enter on bullish confirmation after the Morning Star (or bearish confirmation after the Evening Star)."
+      ],
+      "exit": [
+        "Stop: beyond the extreme of the pattern (below for Morning Star, above for Evening Star).",
+        "Target: the next resistance (Morning Star) or support (Evening Star) level."
+      ],
+      "tags": "morning evening star three candle reversal"
+    },
+    "ema9x21": {
+      "id": "ema9x21",
+      "title": "9 EMA / 21 EMA Crossover",
+      "market": "Any market",
+      "desc": "A fast dual-EMA crossover for shorter-term trend shifts.",
+      "entry": [
+        "Long: 9 EMA crosses above the 21 EMA, with price preferably trading above both.",
+        "Enter after confirmation of the cross.",
+        "Short: reverse — 9 EMA crosses below the 21 EMA."
+      ],
+      "exit": [
+        "Stop: below the recent swing low (long) or above the recent swing high (short).",
+        "Exit on the opposite crossover, or at a predetermined target."
+      ],
+      "tags": "ema 9 21 crossover fast"
+    },
+    "ema20pullback": {
+      "id": "ema20pullback",
+      "title": "20 EMA Pullback",
+      "market": "Any market",
+      "desc": "Trades pullbacks to the 20 EMA within an established trend, using the EMA as dynamic support/resistance.",
+      "entry": [
+        "Confirm an established bullish trend with price holding above the 20 EMA.",
+        "Wait for price to pull back toward the 20 EMA.",
+        "Look for a bullish candle or price-action confirmation as the EMA holds as support.",
+        "Enter on that confirmation (short: reverse, trend below EMA)."
+      ],
+      "exit": [
+        "Stop: below the swing low that formed the pullback.",
+        "Trail the stop using the EMA itself or subsequent swing lows."
+      ],
+      "tags": "ema 20 pullback dynamic support trend"
+    },
+    "ema50trend": {
+      "id": "ema50trend",
+      "title": "50 EMA Trend Strategy",
+      "market": "Any market",
+      "desc": "A trend-continuation setup using the 50 EMA as the key reference level.",
+      "entry": [
+        "Confirm price is above a rising 50 EMA (long) or below a falling 50 EMA (short).",
+        "Wait for a pullback toward the 50 EMA.",
+        "Enter on bullish (long) or bearish (short) confirmation at the EMA."
+      ],
+      "exit": [
+        "Stop: below the swing low (long) or above the swing high (short) that formed the pullback."
+      ],
+      "tags": "ema 50 trend pullback"
+    },
+    "ema200filter": {
+      "id": "ema200filter",
+      "title": "200 EMA Trend Filter",
+      "market": "Any market",
+      "desc": "Uses the 200 EMA purely as a directional filter rather than a direct entry trigger.",
+      "entry": [
+        "If price is above the 200 EMA, only take long setups; look for pullbacks or breakouts in that direction.",
+        "If price is below the 200 EMA, only take short setups.",
+        "Combine with a separate entry trigger (pullback, breakout, or pattern) rather than trading the EMA alone."
+      ],
+      "exit": [
+        "Stop and target follow whichever entry trigger is used alongside the filter."
+      ],
+      "tags": "ema 200 filter regime long term"
+    },
+    "ema2050cross": {
+      "id": "ema2050cross",
+      "title": "20/50 EMA Crossover",
+      "market": "Any market",
+      "desc": "A medium-term crossover signal, best used alongside a broader trend filter rather than standalone.",
+      "entry": [
+        "Bullish: 20 EMA crosses above the 50 EMA.",
+        "Bearish: 20 EMA crosses below the 50 EMA.",
+        "Confirm the crossover aligns with a broader trend filter (e.g. 200 EMA) before entry."
+      ],
+      "exit": [
+        "Stop: below the recent swing low (long) or above the recent swing high (short).",
+        "Exit on the opposite crossover."
+      ],
+      "tags": "ema 20 50 crossover medium term"
+    },
+    "goldendeathcross": {
+      "id": "goldendeathcross",
+      "title": "50/200 EMA Golden Cross / Death Cross",
+      "market": "Any market",
+      "desc": "A longer-term trend signal — the 50 EMA/MA crossing the 200 EMA/MA.",
+      "entry": [
+        "Golden Cross (bullish): the 50 EMA/MA crosses above the 200.",
+        "Death Cross (bearish): the 50 EMA/MA crosses below the 200.",
+        "Treat this as a longer-term regime signal — entries after the cross can be later than shorter-EMA setups."
+      ],
+      "exit": [
+        "Stop and target are typically set using a shorter-term structure once the longer-term bias is established."
+      ],
+      "tags": "golden cross death cross 50 200 long term"
+    },
+    "emaribbon": {
+      "id": "emaribbon",
+      "title": "EMA Ribbon Strategy",
+      "market": "Any market",
+      "desc": "Uses a stack of EMAs (e.g. 8/13/21/34/55) to read trend strength and pullback entries.",
+      "entry": [
+        "Bullish: shorter EMAs sit above longer EMAs, the ribbon is expanding, and price is above the ribbon.",
+        "Wait for a pullback into the ribbon.",
+        "Enter on a bullish rejection as the pullback holds within the ribbon (short: reverse)."
+      ],
+      "exit": [
+        "Stop: beyond the ribbon structure on the side opposite the trade.",
+        "Trail using the ribbon as it develops."
+      ],
+      "tags": "ema ribbon multiple stack expansion"
+    },
+    "rsireversal": {
+      "id": "rsireversal",
+      "title": "RSI Overbought/Oversold Reversal",
+      "market": "Any market",
+      "desc": "Trades a momentum turn at RSI extremes, confirmed by price at a meaningful level — not the RSI reading alone.",
+      "entry": [
+        "Long: RSI reaches the oversold area (commonly 30) while price reaches a meaningful support level.",
+        "Wait for RSI to turn upward and price to confirm the reversal.",
+        "Short: reverse — RSI reaches overbought (commonly 70) at a resistance level, then turns down with price confirmation."
+      ],
+      "exit": [
+        "Stop: beyond the support/resistance level that produced the reversal.",
+        "Note: an overbought or oversold RSI alone is not a sell/buy signal — strong trends can stay extended for a long time."
+      ],
+      "tags": "rsi overbought oversold 70 30 reversal"
+    },
+    "rsi50trend": {
+      "id": "rsi50trend",
+      "title": "RSI 50-Level Trend Strategy",
+      "market": "Any market",
+      "desc": "Uses the RSI midline (50) as a simple trend filter alongside price structure.",
+      "entry": [
+        "Bullish bias: RSI holds above 50 and price structure is bullish.",
+        "Bearish bias: RSI holds below 50 and price structure is bearish.",
+        "Use this as a filter for entries taken from another trigger (pullback, breakout, pattern)."
+      ],
+      "exit": [
+        "Stop and target follow whichever entry trigger is used alongside the filter."
+      ],
+      "tags": "rsi 50 midline trend filter"
+    },
+    "rsidivergence": {
+      "id": "rsidivergence",
+      "title": "RSI Divergence",
+      "market": "Any market",
+      "desc": "Trades a disagreement between price and momentum as an early warning of exhaustion.",
+      "entry": [
+        "Bullish divergence: price makes a lower low while RSI makes a higher low.",
+        "Bearish divergence: price makes a higher high while RSI makes a lower high.",
+        "Require a price-action confirmation candle before entering — divergence alone is not the trigger."
+      ],
+      "exit": [
+        "Stop: beyond the swing that formed the divergence.",
+        "Target: the next meaningful support/resistance level."
+      ],
+      "tags": "rsi divergence bullish bearish momentum"
+    },
+    "macdcross": {
+      "id": "macdcross",
+      "title": "MACD Crossover",
+      "market": "Any market",
+      "desc": "Trades the MACD line crossing its signal line, ideally aligned with a broader trend filter.",
+      "entry": [
+        "Long: MACD line crosses above the signal line, preferably with price above a major trend filter.",
+        "Short: MACD line crosses below the signal line.",
+        "Enter after the crossover is confirmed."
+      ],
+      "exit": [
+        "Stop: beyond the recent swing that preceded the crossover.",
+        "Exit on the opposite crossover."
+      ],
+      "tags": "macd crossover signal line"
+    },
+    "macdzero": {
+      "id": "macdzero",
+      "title": "MACD Zero-Line Strategy",
+      "market": "Any market",
+      "desc": "Uses the MACD's position relative to the zero line as a directional bias filter.",
+      "entry": [
+        "Bullish: MACD crosses above the zero line with price structure supporting a bullish trend.",
+        "Bearish: MACD crosses below the zero line with price structure supporting a bearish trend."
+      ],
+      "exit": [
+        "Stop and target follow whichever entry trigger is paired with this bias filter."
+      ],
+      "tags": "macd zero line bias"
+    },
+    "macddivergence": {
+      "id": "macddivergence",
+      "title": "MACD Divergence",
+      "market": "Any market",
+      "desc": "Compares price highs/lows against MACD highs/lows to flag momentum exhaustion.",
+      "entry": [
+        "Bearish divergence: price makes a higher high while MACD makes a lower high.",
+        "Bullish divergence: price makes a lower low while MACD makes a higher low.",
+        "Require a price confirmation candle before acting on the divergence."
+      ],
+      "exit": [
+        "Stop: beyond the swing that formed the divergence."
+      ],
+      "tags": "macd divergence bullish bearish"
+    },
+    "stochreversal": {
+      "id": "stochreversal",
+      "title": "Stochastic Reversal",
+      "market": "Any market",
+      "desc": "Trades a %K/%D cross out of overbought or oversold territory, confirmed by price.",
+      "entry": [
+        "Long: stochastic enters the oversold area (commonly below 20), then %K crosses above %D.",
+        "Confirm with support or price-action at the same level before entry.",
+        "Short: reverse — overbought area (commonly above 80), %K crosses below %D."
+      ],
+      "exit": [
+        "Stop: beyond the support/resistance level that produced the setup."
+      ],
+      "tags": "stochastic overbought oversold 80 20 reversal"
+    },
+    "bbmeanreversion": {
+      "id": "bbmeanreversion",
+      "title": "Bollinger Band Mean Reversion",
+      "market": "Any market",
+      "desc": "Fades a move to the outer Bollinger Band back toward the middle band, in ranging conditions only.",
+      "entry": [
+        "Long: price reaches or trades below the lower band while the market is ranging rather than strongly trending.",
+        "Wait for a reversal signal at the band.",
+        "Short: reverse — upper band with a bearish reversal signal."
+      ],
+      "exit": [
+        "Target: the middle band, or the opposite band depending on the setup.",
+        "Stop: just beyond the recent extreme outside the band."
+      ],
+      "tags": "bollinger band mean reversion middle band range"
+    },
+    "bbsqueeze": {
+      "id": "bbsqueeze",
+      "title": "Bollinger Squeeze Breakout",
+      "market": "Any market",
+      "desc": "Trades the expansion that follows a period of tightly compressed volatility.",
+      "entry": [
+        "Confirm the bands have contracted significantly (a 'squeeze').",
+        "Wait for the bands to begin expanding.",
+        "Confirm breakout direction with price and, ideally, volume.",
+        "Enter on the breakout."
+      ],
+      "exit": [
+        "Stop: inside the prior consolidation range."
+      ],
+      "tags": "bollinger squeeze breakout volatility contraction"
+    },
+    "atrstoploss": {
+      "id": "atrstoploss",
+      "title": "ATR Stop-Loss",
+      "market": "Any market",
+      "desc": "Sizes the stop distance from current volatility instead of a fixed point value.",
+      "entry": [
+        "Calculate the current ATR (Average True Range) for the instrument.",
+        "Set stop distance = ATR × a chosen multiplier (e.g. 1.5).",
+        "Apply this adaptive distance instead of a fixed ₹/point stop, regardless of entry trigger used."
+      ],
+      "exit": [
+        "Stop is the ATR-based distance itself — it widens or tightens automatically as volatility changes."
+      ],
+      "tags": "atr stop loss volatility adaptive"
+    },
+    "atrtrailing": {
+      "id": "atrtrailing",
+      "title": "ATR Trailing Stop",
+      "market": "Any market",
+      "desc": "Trails an open position using ATR-based distance rather than a fixed trailing amount.",
+      "entry": [
+        "Enter a trend using any confirmed trigger.",
+        "Calculate ATR on an ongoing basis as the trade develops.",
+        "Trail the stop behind price at a multiple of current ATR."
+      ],
+      "exit": [
+        "Exit when the ATR-based trailing stop is hit."
+      ],
+      "tags": "atr trailing stop volatility"
+    },
+    "vwapreclaim": {
+      "id": "vwapreclaim",
+      "title": "VWAP Reclaim",
+      "market": "Intraday",
+      "desc": "Trades a reclaim of VWAP after price has traded on the opposite side of it.",
+      "entry": [
+        "Confirm price has been trading below VWAP.",
+        "Wait for price to reclaim VWAP with a candle closing above it.",
+        "Wait for a retest of VWAP that holds as support.",
+        "Enter long on that confirmation (short: reverse)."
+      ],
+      "exit": [
+        "Stop: below the retest low (long) or above the retest high (short).",
+        "Target: the next intraday resistance (long) or support (short) level."
+      ],
+      "tags": "vwap reclaim intraday session"
+    },
+    "vwaprejection": {
+      "id": "vwaprejection",
+      "title": "VWAP Rejection",
+      "market": "Intraday",
+      "desc": "Fades a rejection of price at VWAP acting as dynamic support/resistance.",
+      "entry": [
+        "Watch price approach VWAP from either side.",
+        "Rejection from below VWAP → potential short.",
+        "Rejection from above VWAP → potential long."
+      ],
+      "exit": [
+        "Stop: just beyond VWAP on the side of the rejection.",
+        "Target: the next intraday level in the trade direction."
+      ],
+      "tags": "vwap rejection intraday dynamic level"
+    },
+    "vwaporb": {
+      "id": "vwaporb",
+      "title": "VWAP + Opening Range",
+      "market": "Intraday",
+      "desc": "Combines an opening-range breakout with VWAP as a directional filter.",
+      "entry": [
+        "Establish the opening range for the session and mark VWAP.",
+        "Wait for a breakout of the opening range.",
+        "Check that VWAP position aligns with the breakout direction.",
+        "Enter only when the breakout and VWAP agree on direction."
+      ],
+      "exit": [
+        "Stop: inside the opening range.",
+        "Target: based on session volatility or a defined R:R."
+      ],
+      "tags": "vwap opening range confluence intraday"
+    },
+    "anchoredvwap": {
+      "id": "anchoredvwap",
+      "title": "Anchored VWAP Reclaim",
+      "market": "Intraday",
+      "desc": "The same reclaim-and-retest logic as session VWAP, but anchored to a chosen reference point instead of the session open.",
+      "entry": [
+        "Choose a predefined anchor point — a major swing, a breakout, a news event, etc.",
+        "Confirm price has been trading below the anchored VWAP.",
+        "Wait for a close above it, then a retest that holds.",
+        "Enter long on that confirmation (short: reverse below a bearish anchor)."
+      ],
+      "exit": [
+        "Stop: below the retest low (long) or above the retest high (short)."
+      ],
+      "tags": "anchored vwap avwap reclaim custom anchor"
+    },
+    "volumebreakout": {
+      "id": "volumebreakout",
+      "title": "Volume Breakout",
+      "market": "Any market",
+      "desc": "Confirms a resistance/support breakout using a significant increase in volume.",
+      "entry": [
+        "Identify resistance and wait for price to break it.",
+        "Confirm the breakout is accompanied by volume significantly above recent average.",
+        "Enter on the breakout candle or its retest."
+      ],
+      "exit": [
+        "Stop: below the breakout structure (long) or above it (short)."
+      ],
+      "tags": "volume breakout confirmation"
+    },
+    "volumespike": {
+      "id": "volumespike",
+      "title": "Volume Spike Reversal",
+      "market": "Any market",
+      "desc": "Fades an extended move that fails to continue despite an abnormal volume spike.",
+      "entry": [
+        "Confirm price has made an extended directional move.",
+        "Watch for abnormally high volume appearing on the move.",
+        "Wait for price to fail to continue and a reversal candle to form.",
+        "Enter after that reversal confirmation."
+      ],
+      "exit": [
+        "Stop: beyond the extreme of the volume-spike candle.",
+        "Note: high volume alone is not a reversal signal — the failure to continue is what matters."
+      ],
+      "tags": "volume spike reversal exhaustion"
+    },
+    "lowvolumepullback": {
+      "id": "lowvolumepullback",
+      "title": "Low-Volume Pullback",
+      "market": "Any market",
+      "desc": "Treats a pullback on shrinking volume as healthy trend behavior, rather than a warning sign.",
+      "entry": [
+        "Confirm a strong bullish impulse move.",
+        "The pullback that follows must occur on noticeably lower volume than the impulse.",
+        "Price must hold support/EMA during the pullback.",
+        "Enter on a bullish breakout from the pullback (short: mirror in a downtrend)."
+      ],
+      "exit": [
+        "Stop: below the pullback low (long) or above it (short)."
+      ],
+      "tags": "low volume pullback impulse trend health"
+    },
+    "adxtrendfilter": {
+      "id": "adxtrendfilter",
+      "title": "ADX Trend Filter",
+      "market": "Any market",
+      "desc": "Uses ADX purely to confirm whether a trend is strong enough to trade, not for direction.",
+      "entry": [
+        "Confirm ADX indicates sufficient trend strength (commonly above ~20–25).",
+        "Determine direction separately, using price structure or EMAs.",
+        "Enter on a pullback or breakout in the trend direction once ADX confirms strength."
+      ],
+      "exit": [
+        "Trail the stop as the trend develops.",
+        "Note: the exact ADX threshold should be tested per market rather than assumed universal."
+      ],
+      "tags": "adx trend strength filter"
+    },
+    "ichimokubreakout": {
+      "id": "ichimokubreakout",
+      "title": "Ichimoku Cloud Breakout",
+      "market": "Any market",
+      "desc": "Trades a confirmed break of price through the Ichimoku cloud with supporting cloud structure.",
+      "entry": [
+        "Long: price breaks above the cloud, with Tenkan-sen above Kijun-sen.",
+        "Confirm the cloud structure supports a bullish trend.",
+        "Enter on the breakout or a retest of cloud structure (short: reverse)."
+      ],
+      "exit": [
+        "Stop: below the relevant cloud/structure level (long) or above it (short)."
+      ],
+      "tags": "ichimoku cloud breakout tenkan kijun"
+    },
+    "tenkankijun": {
+      "id": "tenkankijun",
+      "title": "Tenkan/Kijun Cross",
+      "market": "Any market",
+      "desc": "A faster Ichimoku signal using just the Tenkan-sen and Kijun-sen lines.",
+      "entry": [
+        "Bullish: Tenkan-sen crosses above Kijun-sen.",
+        "Bearish: Tenkan-sen crosses below Kijun-sen.",
+        "Use cloud position as additional confirmation before entry."
+      ],
+      "exit": [
+        "Stop: beyond the recent swing that preceded the cross."
+      ],
+      "tags": "ichimoku tenkan kijun cross"
+    },
+    "fibretracement": {
+      "id": "fibretracement",
+      "title": "Fibonacci Retracement",
+      "market": "Any market",
+      "desc": "Trades a pullback into a Fibonacci retracement zone within an established impulse move.",
+      "entry": [
+        "Identify a strong bullish (or bearish) impulse move.",
+        "Draw Fibonacci retracement from the swing low to the swing high (or reverse for bearish).",
+        "Wait for a pullback into a retracement zone (23.6 / 38.2 / 50 / 61.8 / 78.6%).",
+        "Enter after price-action confirmation within that zone."
+      ],
+      "exit": [
+        "Stop: beyond the swing structure behind the retracement zone.",
+        "Target: the previous swing high/low, or a Fibonacci extension."
+      ],
+      "tags": "fibonacci retracement 61.8 50 38.2 pullback"
+    },
+    "fibemaconfluence": {
+      "id": "fibemaconfluence",
+      "title": "Fibonacci + EMA Confluence",
+      "market": "Any market",
+      "desc": "Only trades a Fibonacci retracement zone when it's reinforced by an independent technical factor.",
+      "entry": [
+        "Identify a Fibonacci retracement zone (e.g. 61.8%).",
+        "Check whether a key EMA (e.g. 20 EMA) and/or a support/resistance level sit in the same zone.",
+        "Enter only when multiple independent factors overlap in that same area."
+      ],
+      "exit": [
+        "Stop: beyond the confluence zone.",
+        "Target: the previous swing high/low or next structural level."
+      ],
+      "tags": "fibonacci ema confluence 20 ema support"
+    },
+    "hhhlstrategy": {
+      "id": "hhhlstrategy",
+      "title": "Higher High / Higher Low Strategy",
+      "market": "Any market",
+      "desc": "Trades continuation of a clean bullish structure — HH → HL → HH → HL.",
+      "entry": [
+        "Confirm a sequence of higher highs and higher lows.",
+        "Wait for a pullback toward the most recent higher low / support.",
+        "Enter on bullish confirmation at that pullback."
+      ],
+      "exit": [
+        "Stop: below the structural low that formed the pullback.",
+        "Exit when the structure breaks, or when a predefined target is reached."
+      ],
+      "tags": "higher high higher low bullish structure"
+    },
+    "llhlstrategy": {
+      "id": "llhlstrategy",
+      "title": "Lower High / Lower Low Strategy",
+      "market": "Any market",
+      "desc": "The bearish mirror of the HH/HL strategy — LL → LH → LL → LH.",
+      "entry": [
+        "Confirm a sequence of lower lows and lower highs.",
+        "Wait for a pullback toward the most recent lower high / resistance.",
+        "Enter on bearish confirmation at that pullback."
+      ],
+      "exit": [
+        "Stop: above the structural high that formed the pullback.",
+        "Exit when the structure breaks, or when a predefined target is reached."
+      ],
+      "tags": "lower high lower low bearish structure"
+    },
+    "bos": {
+      "id": "bos",
+      "title": "Break of Structure — BOS",
+      "market": "Any market",
+      "desc": "Confirms trend continuation through a decisive break of the prior swing point.",
+      "entry": [
+        "Bullish: confirm the market's existing structure, then wait for the previous swing high to break with a confirmed close.",
+        "Bearish: reverse — previous swing low breaks with a confirmed close.",
+        "Wait for continuation or a retest before entry."
+      ],
+      "exit": [
+        "Stop: beyond the swing point that was broken."
+      ],
+      "tags": "break of structure bos continuation"
+    },
+    "choch": {
+      "id": "choch",
+      "title": "Change of Character — CHoCH",
+      "market": "Any market",
+      "desc": "Flags a potential transition from one market structure to another, ahead of a full trend reversal.",
+      "entry": [
+        "Example: in a downtrend, watch for a higher low to form, followed by a break of the previous lower high.",
+        "Treat this shift as the market potentially changing character rather than a confirmed full reversal.",
+        "Require confirmation from subsequent structure rather than trading a single candle."
+      ],
+      "exit": [
+        "Stop: beyond the swing point that defined the character change.",
+        "Manage the trade as the new structure develops, tightening only once confirmed."
+      ],
+      "tags": "change of character choch reversal transition"
+    },
+    "liquiditysweep": {
+      "id": "liquiditysweep",
+      "title": "Liquidity Sweep Reversal",
+      "market": "Any market",
+      "desc": "Trades the reversal that follows a stop-hunt through a confirmed swing point, once price closes back on the original side.",
+      "entry": [
+        "Long: identify a confirmed swing low that produced a clear upward reaction. Price trades below that low, then the candle closes back above it.",
+        "Enter as price breaks the high of the sweep/rejection candle.",
+        "Short: mirror using a confirmed swing high — price trades above it, closes back below, enter below the sweep-candle low."
+      ],
+      "exit": [
+        "Stop: below the sweep low (long) or above the sweep high (short).",
+        "Target: the nearest opposing swing high/low or liquidity pocket."
+      ],
+      "tags": "liquidity sweep stop hunt reversal swing"
+    },
+    "sfp": {
+      "id": "sfp",
+      "title": "Swing Failure Pattern — SFP",
+      "market": "Any market",
+      "desc": "A stricter version of the liquidity sweep — price must trade beyond a significant prior swing and close back inside it, not merely touch it.",
+      "entry": [
+        "Bullish: mark a significant prior swing low. Price must trade below that exact low, then close back above it — the sweep low becomes the invalidation point.",
+        "Enter above the SFP candle's high.",
+        "Bearish: the exact opposite, using a prior swing high."
+      ],
+      "exit": [
+        "Stop: below the sweep low (bullish) or above the sweep high (bearish).",
+        "Target: the next significant swing high/low.",
+        "Note: merely touching the old level without trading through it does not qualify as an SFP."
+      ],
+      "tags": "swing failure pattern sfp sweep invalidation"
+    },
+    "bosretest": {
+      "id": "bosretest",
+      "title": "Break of Structure + Retest",
+      "market": "Any market",
+      "desc": "Trades continuation only after a broken swing point is retested and holds as the new support/resistance.",
+      "entry": [
+        "Long: identify a valid swing high within the current structure. Price closes above it, then returns to retest the broken level.",
+        "The old resistance must hold as support. Enter after bullish rejection/confirmation at the retest.",
+        "Short: use a swing low → breakdown → retest → bearish rejection."
+      ],
+      "exit": [
+        "Stop: below the retest low (long) or above the retest high (short).",
+        "Target: the next structural high (long) or low (short)."
+      ],
+      "tags": "break of structure bos retest continuation"
+    },
+    "chochretest": {
+      "id": "chochretest",
+      "title": "Change of Character + Retest",
+      "market": "Any market",
+      "desc": "Trades the early stage of a trend reversal — a structural shift confirmed by a retest of the level that caused it.",
+      "entry": [
+        "Bullish: market is making lower highs and lower lows. Price closes above the latest meaningful lower high — the initial structural shift.",
+        "Wait for a pullback toward the broken level; enter on bullish reaction.",
+        "Bearish: higher highs/higher lows → break of the latest meaningful higher low → retest → short."
+      ],
+      "exit": [
+        "Stop: below the new higher low (bullish) or above the new lower high (bearish)."
+      ],
+      "tags": "change of character choch retest reversal structure"
+    },
+    "rangerejection": {
+      "id": "rangerejection",
+      "title": "Range High/Low Rejection",
+      "market": "Any market",
+      "desc": "Fades a range boundary when price pokes through it but fails to hold, closing back inside the range.",
+      "entry": [
+        "Define a range using at least two meaningful reactions at both boundaries.",
+        "Long: price trades into/through the lower boundary but fails to hold below it, closing back inside the range.",
+        "Enter above the rejection candle's high (short: reverse at the range high)."
+      ],
+      "exit": [
+        "Stop: below the rejection low (long) or above the rejection high (short).",
+        "Target: the range midpoint or the opposite boundary."
+      ],
+      "tags": "range rejection boundary high low fade"
+    },
+    "rangeexpansion": {
+      "id": "rangeexpansion",
+      "title": "Range Expansion",
+      "market": "Any market",
+      "desc": "Trades a decisive close outside an established sideways range, distinct from a rejection back inside it.",
+      "entry": [
+        "Identify an established sideways range and mark its high and low.",
+        "Wait for a candle to close outside the range without immediately closing back inside it.",
+        "Enter on the breakout candle, or the first valid retest."
+      ],
+      "exit": [
+        "Stop: back inside the range.",
+        "Target: the measured range projected from the breakout, or the next major level."
+      ],
+      "tags": "range expansion breakout sideways"
+    },
+    "genericorb": {
+      "id": "genericorb",
+      "title": "Opening Range Breakout — Generic ORB",
+      "market": "Intraday",
+      "desc": "The general-purpose version of an opening-range breakout, applicable across intraday markets.",
+      "entry": [
+        "Define the opening range for the session and mark its high and low.",
+        "Wait for a breakout above the range high (long) or below the range low (short).",
+        "Confirm with price and, ideally, volume before entry."
+      ],
+      "exit": [
+        "Stop: inside or just under the opening range.",
+        "Target: based on volatility or a defined R:R multiple of the range."
+      ],
+      "tags": "opening range breakout orb generic intraday"
+    },
+    "donchian": {
+      "id": "donchian",
+      "title": "Donchian Channel Breakout",
+      "market": "Any market",
+      "desc": "Trades a breakout of the highest-high / lowest-low channel over a fixed lookback period.",
+      "entry": [
+        "Long: price breaks above the N-period highest high (commonly 20-period).",
+        "Short: price breaks below the N-period lowest low."
+      ],
+      "exit": [
+        "Can be combined with an ATR-based trailing stop instead of a fixed stop."
+      ],
+      "tags": "donchian channel breakout 20 period"
+    },
+    "mameanreversion": {
+      "id": "mameanreversion",
+      "title": "Moving Average Mean Reversion",
+      "market": "Any market",
+      "desc": "Fades an extended move away from a moving average back toward it, in ranging conditions.",
+      "entry": [
+        "Confirm the market is ranging rather than strongly trending.",
+        "Wait for price to move significantly away from its moving average.",
+        "Confirm momentum beginning to reverse before entry."
+      ],
+      "exit": [
+        "Target: the moving average itself.",
+        "Stop: beyond the recent price extreme."
+      ],
+      "tags": "mean reversion moving average range"
+    },
+    "bbmeanreversion2": {
+      "id": "bbmeanreversion2",
+      "title": "Bollinger Mean Reversion (extended)",
+      "market": "Any market",
+      "desc": "The Bollinger framework applied specifically as a mean-reversion system, with a hard filter against strong trends.",
+      "entry": [
+        "Apply the standard Bollinger Band mean-reversion rules (see Bollinger section).",
+        "Critical filter: confirm the market is genuinely ranging — avoid fading price that's inside a strong trend."
+      ],
+      "exit": [
+        "Target: the middle or opposite band.",
+        "Stop: just beyond the recent extreme outside the band."
+      ],
+      "tags": "bollinger mean reversion trend filter"
+    },
+    "matrendfollow": {
+      "id": "matrendfollow",
+      "title": "Moving Average Trend Following",
+      "market": "Any market",
+      "desc": "A complete trend-following framework using a long-term MA for bias and a shorter EMA for entries.",
+      "entry": [
+        "Confirm the regime: price above the 200 EMA (bullish) or below it (bearish).",
+        "Wait for a pullback to the 20 EMA in the direction of the regime.",
+        "Enter on confirmation at the pullback."
+      ],
+      "exit": [
+        "Exit on a structural break, a trailing stop, or an opposite signal."
+      ],
+      "tags": "moving average trend following 200 ema regime"
+    },
+    "adxematrend": {
+      "id": "adxematrend",
+      "title": "ADX + EMA Trend Strategy",
+      "market": "Any market",
+      "desc": "Combines a long-term filter, a short-term EMA alignment, and ADX trend-strength confirmation.",
+      "entry": [
+        "Confirm price is above the 200 EMA and the 20 EMA is above the 50 EMA (long setup).",
+        "Confirm ADX indicates an established trend.",
+        "Wait for a pullback toward the 20/50 EMA area.",
+        "Enter on bullish confirmation (short: reverse all conditions)."
+      ],
+      "exit": [
+        "Stop: below the swing low that formed the pullback (long) or above it (short)."
+      ],
+      "tags": "adx ema trend strength combined"
+    },
+    "emarsi": {
+      "id": "emarsi",
+      "title": "EMA + RSI",
+      "market": "Any market",
+      "desc": "Combines a long-term trend filter with an RSI momentum condition for a pullback entry.",
+      "entry": [
+        "Confirm price is above the 200 EMA.",
+        "Wait for a pullback toward the 20/50 EMA.",
+        "Confirm RSI holds above the 40–50 zone during the pullback.",
+        "Enter on bullish price confirmation (short: reverse all conditions)."
+      ],
+      "exit": [
+        "Stop: below the swing low that formed the pullback (long) or above it (short)."
+      ],
+      "tags": "ema rsi confluence pullback"
+    },
+    "emamacd": {
+      "id": "emamacd",
+      "title": "EMA + MACD",
+      "market": "Any market",
+      "desc": "Combines a trend filter, EMA alignment, and MACD momentum confirmation.",
+      "entry": [
+        "Confirm price is above the 200 EMA and the short EMA is above the long EMA.",
+        "Confirm MACD is bullish (above signal line / above zero).",
+        "Wait for a pullback or retest, then enter on confirmation."
+      ],
+      "exit": [
+        "Stop: below the swing low that formed the pullback."
+      ],
+      "tags": "ema macd confluence trend momentum"
+    },
+    "emarsimacd": {
+      "id": "emarsimacd",
+      "title": "EMA + RSI + MACD",
+      "market": "Any market",
+      "desc": "A complete multi-factor system — trend, setup, momentum, confirmation and risk all handled by a different tool.",
+      "entry": [
+        "Trend: confirm regime using the 200 EMA.",
+        "Setup: wait for a pullback to the 20/50 EMA.",
+        "Momentum: confirm RSI supports the trade direction.",
+        "Confirmation: confirm MACD agrees with the same direction.",
+        "Enter once all four factors align."
+      ],
+      "exit": [
+        "Risk: size the stop using ATR rather than a fixed point value."
+      ],
+      "tags": "ema rsi macd complete system confluence"
+    },
+    "srrsidivergence": {
+      "id": "srrsidivergence",
+      "title": "Support + RSI Divergence",
+      "market": "Any market",
+      "desc": "Combines a key support/resistance level with RSI divergence for a higher-conviction reversal entry.",
+      "entry": [
+        "Long: price reaches support and makes a lower low, while RSI makes a higher low (bullish divergence).",
+        "Wait for a bullish confirmation candle at the level before entry.",
+        "Short: reverse — resistance, higher high in price with a lower high in RSI."
+      ],
+      "exit": [
+        "Stop: below the support/swing low (long) or above the resistance/swing high (short)."
+      ],
+      "tags": "support resistance rsi divergence confluence"
+    },
+    "breakoutvolema": {
+      "id": "breakoutvolema",
+      "title": "Breakout + Volume + EMA",
+      "market": "Any market",
+      "desc": "A strong trend-plus-breakout-plus-confirmation framework combining three independent filters.",
+      "entry": [
+        "Confirm price is above the 200 EMA (bullish regime).",
+        "Wait for resistance to break.",
+        "Confirm the breakout is accompanied by expanding volume.",
+        "Wait for a retest of the broken level to hold, then enter."
+      ],
+      "exit": [
+        "Stop: below the retest low, or below the breakout structure."
+      ],
+      "tags": "breakout volume ema trend confirmation"
+    },
+    "ema20pinbar": {
+      "id": "ema20pinbar",
+      "title": "20 EMA Pullback + Pin Bar",
+      "market": "Any market",
+      "desc": "Combines a pullback to the 20 EMA with a pin-bar rejection candle for a tighter, more selective entry.",
+      "entry": [
+        "Confirm price is above a (preferably rising) 20 EMA.",
+        "Wait for price to pull back to/near the EMA.",
+        "A pin bar must form with rejection from the EMA area.",
+        "Enter above the pin bar's high (short: reverse)."
+      ],
+      "exit": [
+        "Stop: below the pin bar's low (long) or above it (short).",
+        "Target: the previous high, or a minimum predefined R:R."
+      ],
+      "tags": "20 ema pullback pin bar combo"
+    },
+    "ema50engulfing": {
+      "id": "ema50engulfing",
+      "title": "50 EMA Pullback + Engulfing",
+      "market": "Any market",
+      "desc": "Requires an engulfing candle at the 50 EMA before taking a trend-pullback entry.",
+      "entry": [
+        "Establish trend direction with price on the appropriate side of the 50 EMA.",
+        "Wait for price to retrace toward the 50 EMA.",
+        "An engulfing candle must form at/near the EMA.",
+        "Enter beyond the engulfing candle."
+      ],
+      "exit": [
+        "Stop: beyond the engulfing candle or the recent swing.",
+        "Target: trend continuation, or a predefined R:R."
+      ],
+      "tags": "50 ema pullback engulfing combo"
+    },
+    "ema200breakout": {
+      "id": "ema200breakout",
+      "title": "200 EMA + Breakout",
+      "market": "Any market",
+      "desc": "Only takes a consolidation breakout when it occurs on the correct side of the 200 EMA regime.",
+      "entry": [
+        "Confirm price is above a (preferably rising) 200 EMA.",
+        "Wait for a consolidation to form above/around the EMA.",
+        "Enter when price closes above the consolidation's resistance, on the breakout or a retest.",
+        "Short: mirror below a falling 200 EMA."
+      ],
+      "exit": [
+        "Stop: below the breakout structure (long) or above it (short).",
+        "Target: the next resistance/support level."
+      ],
+      "tags": "200 ema breakout regime consolidation"
+    },
+    "emastackstructure": {
+      "id": "emastackstructure",
+      "title": "EMA Stack + Market Structure",
+      "market": "Any market",
+      "desc": "Requires a fully aligned EMA stack and intact swing structure before taking a pullback entry.",
+      "entry": [
+        "Confirm 20 EMA > 50 EMA > 200 EMA (bullish stack).",
+        "Confirm price is forming higher highs and higher lows.",
+        "Wait for a pullback toward the 20/50 EMA area while structure remains intact.",
+        "Enter on bullish confirmation (short: reverse the stack and structure)."
+      ],
+      "exit": [
+        "Stop: below the relevant higher low (long) or above the relevant lower high (short)."
+      ],
+      "tags": "ema stack structure alignment pullback"
+    },
+    "emaribboncompression": {
+      "id": "emaribboncompression",
+      "title": "EMA Ribbon Compression",
+      "market": "Any market",
+      "desc": "Trades the expansion that follows an EMA ribbon contracting into a tight consolidation, rather than a pullback into an already-expanded ribbon.",
+      "entry": [
+        "Use a predefined EMA group (e.g. 8/13/21/34/55).",
+        "Wait for the EMAs to contract/converge as price consolidates around the ribbon.",
+        "Enter after a candle closes outside the consolidation, in the direction of the expansion."
+      ],
+      "exit": [
+        "Stop: behind the consolidation.",
+        "Exit when the ribbon structure or trend fails."
+      ],
+      "tags": "ema ribbon compression contraction expansion"
+    },
+    "rsifailureswing": {
+      "id": "rsifailureswing",
+      "title": "RSI Failure Swing",
+      "market": "Any market",
+      "desc": "A four-step RSI pattern — exit from an extreme, pull back without retesting it, then break the prior reaction high/low.",
+      "entry": [
+        "Bullish: RSI enters oversold, recovers above the oversold area, pulls back but forms a higher low, then breaks its previous reaction high.",
+        "Price must confirm bullish structure alongside the RSI pattern.",
+        "Enter on that confirmation (short: mirror using overbought)."
+      ],
+      "exit": [
+        "Stop: below the corresponding price swing (long) or above it (short)."
+      ],
+      "tags": "rsi failure swing oversold overbought pattern"
+    },
+    "macddivstructure": {
+      "id": "macddivstructure",
+      "title": "MACD Divergence + Structure Break",
+      "market": "Any market",
+      "desc": "Only acts on MACD divergence once price also breaks the structural level that the divergence implied.",
+      "entry": [
+        "Bullish: price makes a lower low while MACD makes a higher low (divergence).",
+        "Wait for price to break the most recent meaningful lower high — a retest is optional.",
+        "Enter after that structural confirmation (short: opposite)."
+      ],
+      "exit": [
+        "Stop: below the divergence low (long) or above the divergence high (short)."
+      ],
+      "tags": "macd divergence structure break confirmation"
+    },
+    "macdhistogram": {
+      "id": "macdhistogram",
+      "title": "MACD Histogram Momentum",
+      "market": "Any market",
+      "desc": "Uses histogram contraction and re-expansion around a pullback to confirm trend continuation.",
+      "entry": [
+        "Identify an established price direction.",
+        "Confirm the histogram contracts during the pullback while price holds structure.",
+        "Enter once the histogram expands again in the trend direction, after price confirmation."
+      ],
+      "exit": [
+        "Stop: below/above the structural invalidation point."
+      ],
+      "tags": "macd histogram momentum contraction expansion"
+    },
+    "bbsrreversal": {
+      "id": "bbsrreversal",
+      "title": "Bollinger + Support/Resistance Reversal",
+      "market": "Any market",
+      "desc": "Only fades an outer Bollinger Band touch when it lines up with an established support or resistance level.",
+      "entry": [
+        "Long: price reaches established support while touching/extending outside the lower band.",
+        "Wait for a rejection candle closing back toward/inside the bands.",
+        "Enter above that confirmation candle (short: resistance + upper band + bearish rejection)."
+      ],
+      "exit": [
+        "Stop: below support/the recent swing low (long) or above resistance/the swing high (short)."
+      ],
+      "tags": "bollinger support resistance confluence reversal"
+    },
+    "nq927": {
+      "id": "nq927",
+      "title": "NQ 9:27 Opening",
+      "market": "NQ Futures",
+      "desc": "Buy at 9:27 AM on NASDAQ futures with a fixed stop and target, trailed to breakeven once the trade moves in favor. Backtested 2021–2025 on both the buy and sell side.",
+      "entry": [],
+      "exit": [],
+      "tags": "opening range orb breakout nq nasdaq futures 9:27 morning trend",
+      "premium": true,
+      "note": "Seasonality filtering improves the risk-adjusted result further — see the Results section on the home page."
+    },
+    "us100orb": {
+      "id": "us100orb",
+      "title": "US100 Opening Range",
+      "market": "US100 / NASDAQ-100",
+      "desc": "A multi-year opening-range breakout framework on the Nasdaq-100, run as both buy and sell variants with year-over-year comparison and a calendar-month suitability score.",
+      "entry": [],
+      "exit": [],
+      "tags": "opening range orb breakout us100 nasdaq 100 seasonality",
+      "premium": true,
+      "note": "Suitability scoring ranks each calendar month and year on this setup — poorly scoring windows are flagged rather than traded."
+    },
+    "b2breakout": {
+      "id": "b2breakout",
+      "title": "B2: 100/50 Breakout",
+      "market": "NQ Futures",
+      "desc": "An opening-range breakout strategy rebuilt year by year from trade-log data with pooled calendar-month seasonality.",
+      "entry": [],
+      "exit": [],
+      "tags": "opening range orb breakout nq futures b2 target stop",
+      "premium": true,
+      "note": "Individual yearly trade logs are treated as source of truth over any combined multi-year file when totals disagree."
+    },
+    "dualmomentum": {
+      "id": "dualmomentum",
+      "title": "Dual Time Frame Momentum",
+      "market": "Any market",
+      "desc": "Trades only in the higher timeframe's momentum direction, executed after a reversal in the same direction on the lower timeframe.",
+      "entry": [
+        "Higher TF bullish and not overbought → look only for long setups; wait for lower-TF bullish momentum reversal to enter long.",
+        "Higher TF bullish but overbought → do not initiate new longs; a lower-TF bearish reversal can be used for a possible short instead.",
+        "Higher TF bearish and not oversold → look only for short setups; wait for lower-TF bearish momentum reversal to enter short.",
+        "Higher TF bearish but oversold → do not initiate new shorts; a lower-TF bullish reversal can be used for a possible long instead.",
+        "Momentum reversal = fast line crossing the slow line on a two-line oscillator (or the equivalent shift for another momentum indicator)."
+      ],
+      "exit": [
+        "Tighten or exit a long once higher-TF momentum becomes overbought and then reverses bearish.",
+        "Tighten or exit a short once higher-TF momentum becomes oversold and then reverses bullish.",
+        "Momentum reversal alone is a warning, not an automatic exit — confirm with the trade's pattern/price/time context before closing."
+      ],
+      "tags": "momentum multiple time frame dual overbought oversold reversal confirmation",
+      "note": "Momentum measures rate of change, not price itself — a momentum reversal does not guarantee a price reversal."
+    },
+    "abccorrection": {
+      "id": "abccorrection",
+      "title": "ABC Correction (Fib Confluence)",
+      "market": "Any market",
+      "desc": "Projects a Wave-C completion zone once Waves A and B are complete, using clustered Fibonacci-based projections rather than a single ratio.",
+      "entry": [
+        "Confirm an ABC correction is underway — overlapping price sections against the prior trend.",
+        "Once A and B are complete, calculate: internal retracements of the prior trend (38.2 / 50 / 61.8 / 78.6%), Wave-A alternate price projections (61.8 / 100 / 162%), and Wave-B external retracements (127 / 162 / 262%).",
+        "Enter only where at least an internal retracement and an alternate price projection cluster in the same narrow zone.",
+        "Trigger entry using either the Trailing One-Bar or Swing Breakout entry method once price reaches that zone."
+      ],
+      "exit": [
+        "Initial stop placed beyond the clustered target zone (invalidation of the correction).",
+        "A close beyond the 78.6% internal retracement suggests the correction has failed — treat as an exit/invalidation signal.",
+        "Once the zone is reached and confirmed, manage using the two-unit approach: protect a short-term unit at a minor target, trail the long-term unit for the resuming trend."
+      ],
+      "tags": "pattern abc correction elliott wave fibonacci retracement projection wave c target",
+      "note": "Priority order for a valid target zone: Internal Retracement → Alternate Price Projection → External Retracement. A strong zone needs at least the first two to agree."
+    },
+    "fivewave": {
+      "id": "fivewave",
+      "title": "Five-Wave Trend (EOW-5)",
+      "market": "Any market",
+      "desc": "Once four legs of a five-wave trend are complete, projects the Wave-5 completion zone from overlapping price-projection clusters.",
+      "entry": [
+        "Confirm a five-part trend structure with non-overlapping swings (Waves 1 through 4 complete).",
+        "Calculate the three EOW-5 projection groups: 100% alternate price projection of Wave 1, 38.2% and 61.8% alternate price projections of Waves 1–3, and 127% and 162% external retracements of Wave 4.",
+        "Identify the zone where these projections converge — this is the potential Wave-5 completion area.",
+        "Enter counter-trend only once price reaches this zone and a lower-timeframe momentum reversal confirms."
+      ],
+      "exit": [
+        "Stop placed beyond the far edge of the projected Wave-5 zone.",
+        "Tighten aggressively once price reaches the zone, pattern indicates Wave-5 completion, higher-TF momentum is overbought/oversold, and lower-TF momentum reverses — all four agreeing is the strongest exit signal for the prior trend.",
+        "If price extends beyond the zone without reversing, treat the setup as invalidated rather than moving the target further out."
+      ],
+      "tags": "pattern five wave trend elliott wave fibonacci wave 5 target projection",
+      "note": "This is a completion/exhaustion read on an existing trend, not a fresh trend-following entry — it's used to anticipate where Wave 5 (and the trend) is likely to end."
+    },
+    "dynamictime": {
+      "id": "dynamictime",
+      "title": "Dynamic Time Projection",
+      "market": "Any market",
+      "desc": "Pairs every price target with a projected time window, using time retracement, alternate time projection, or a time band built from overlapping cycle ranges.",
+      "entry": [
+        "Calculate the Time Retracement of the prior move (ratios: 38.2 / 50 / 61.8 / 100 / 162%) — for a simple ABC correction, completion commonly falls in the 38.2–61.8% time-retracement range.",
+        "Calculate the Alternate Time Projection (62 / 100 / 162%) from a comparable prior swing to estimate a future time target.",
+        "Build a Time Band: for a bull trend, overlap the High-to-High and Low-to-High cycle ranges; for a bear trend, overlap Low-to-Low and High-to-Low ranges.",
+        "Only take the trade if the price target and the time window arrive together — a price zone reached far outside its time window is treated with more caution."
+      ],
+      "exit": [
+        "If price reaches the projected zone before the time window arrives, tighten the stop but avoid assuming the reversal is complete.",
+        "If the time window arrives and momentum/pattern also agree, treat this as the strongest signal to exit or reverse.",
+        "A complex correction extending toward the 100% time retracement is treated as still valid, not as invalidation."
+      ],
+      "tags": "time analysis dynamic time band retracement alternate time projection cycle",
+      "note": "This produces a time zone rather than one exact bar — used to add confidence to a price-based target, not as a standalone trigger."
+    },
+    "trailingentry": {
+      "id": "trailingentry",
+      "title": "Trailing One-Bar Entry",
+      "market": "Any market",
+      "desc": "An objective, lower-exposure entry method — a stop order placed one tick beyond the latest completed bar, trailed forward bar by bar.",
+      "entry": [
+        "Confirm the required momentum + pattern + price + time conditions are already present.",
+        "Long: place a buy-stop 1 tick above the high of the most recently completed bar.",
+        "Short: place a sell-stop 1 tick below the low of the most recently completed bar.",
+        "If the next bar doesn't trigger the order, move it to 1 tick beyond the newest completed bar, and repeat.",
+        "Continue trailing until the order triggers or the setup is invalidated by opposite momentum."
+      ],
+      "exit": [
+        "Initial stop: 1 tick below the relevant prior swing low (long) or above the relevant prior swing high (short).",
+        "The same trailing one-bar logic can be used to exit: trail the stop 1 tick below the previous bar's low (long) or above the previous bar's high (short) once an exit condition (target/pattern/momentum) is met."
+      ],
+      "tags": "entry trailing one bar high low objective breakout stop",
+      "note": "This method requires the market to show some movement in the expected direction before entry — it doesn't chase price immediately."
+    },
+    "swingbreakout": {
+      "id": "swingbreakout",
+      "title": "Swing Breakout Entry",
+      "market": "Any market",
+      "desc": "A more confirmed, higher-exposure entry method — triggers one tick beyond the most recent swing high or low once conditions already align.",
+      "entry": [
+        "Confirm the required momentum + pattern + price + time conditions are already present.",
+        "Long: enter 1 tick above the recent swing high.",
+        "Short: enter 1 tick below the recent swing low.",
+        "This is not a blind breakout entry — it is only taken once the broader four-factor setup already agrees."
+      ],
+      "exit": [
+        "Initial protective stop placed beyond the relevant prior swing.",
+        "Manage using the two-unit approach: take a short-term unit near the first minor target, hold the long-term unit with a wider stop while the trend develops.",
+        "Tighten the long-term stop as higher-timeframe momentum shows exhaustion (reaches overbought/oversold and reverses)."
+      ],
+      "tags": "entry swing breakout objective confirmation stop position",
+      "note": "Trade-off versus the Trailing One-Bar entry: later entry and larger initial exposure, in exchange for more confirmation before commitment."
+    },
+    "s2short": {
+      "id": "s2short",
+      "title": "S2 Short Strategy",
+      "market": "NQ Futures",
+      "desc": "A fixed-risk short-side system with a 50-point stop and 100-point target. Five-year net of +31,140 points across 1,253 trades (2021–2025).",
+      "entry": [
+        "Identify the defined short-side trigger level for the session (opening-range or session-structure based).",
+        "Enter short once price breaks and confirms below that level.",
+        "One entry per session — no re-entry after being stopped out."
+      ],
+      "exit": [
+        "Stop-loss fixed at 50 points above entry.",
+        "Target fixed at 100 points below entry.",
+        "No trailing on this variant — the trade runs to stop, target, or end of day."
+      ],
+      "tags": "short sell s2 fixed stop target",
+      "note": "June and December were the weakest calendar months historically for this setup; October, August and March were the strongest."
+    },
+    "btcmacro": {
+      "id": "btcmacro",
+      "title": "BTC Macro Bias Model",
+      "market": "Bitcoin",
+      "desc": "A daily bearish/bullish bias framework for Bitcoin, built around key price levels, ETF flow data, and macro catalysts like FOMC decisions.",
+      "entry": [
+        "Set a daily directional bias (bullish/bearish) from key levels, ETF flow data, and upcoming macro catalysts.",
+        "Only take trades in the direction of that daily bias.",
+        "Enter on a confirmed break of the relevant key level in the bias direction."
+      ],
+      "exit": [
+        "Stop placed beyond the key level that invalidates the daily bias.",
+        "Target set at the next major key level in the bias direction.",
+        "Bias — and any open position — is re-evaluated daily as new macro/ETF-flow information arrives."
+      ],
+      "tags": "bitcoin btc crypto macro bias etf flows",
+      "note": "This is a discretionary macro overlay rather than a pure mechanical system — used to frame direction, not to time exact entries."
+    },
+    "monthlyswitch": {
+      "id": "monthlyswitch",
+      "title": "Monthly Side-Switch Plan",
+      "market": "NQ Futures",
+      "desc": "Switches between the buy and sell variant of the NQ 9:27 setup by calendar month, based on which side has historically performed better in that month across the 5-year pooled data.",
+      "entry": [
+        "Check the calendar month against the pooled 5-year seasonality table for the NQ 9:27 setup.",
+        "If the month historically favors buy, trade only the buy variant this month.",
+        "If the month historically favors sell, trade only the sell variant this month.",
+        "Entry mechanics for the chosen side follow the standard NQ 9:27 Opening rules exactly."
+      ],
+      "exit": [
+        "Same exit rules as the base NQ 9:27 setup: 50pt stop, 100pt target, trail to breakeven after +50pts, EOD exit otherwise.",
+        "The side (buy or sell) does not change mid-month even if a losing streak occurs — the switch only happens at month boundaries."
+      ],
+      "tags": "seasonality monthly side switch buy sell nq plan calendar",
+      "note": "This plan nets +5,183.1 points over the same 5-year window — notably better than running either side alone all year."
+    }
+  },
+  "categories": [
+    [
+      "01",
+      "OPENING RANGE & BREAKOUT",
+      "Fixed rules around the first minutes of a session, tested across multiple markets.",
+      [
+        "nq927",
+        "us100orb",
+        "b2breakout"
+      ]
+    ],
+    [
+      "02",
+      "PRICE ACTION & CHART PATTERNS",
+      "Structural setups built from support, resistance and classic chart patterns.",
+      [
+        "srbounce",
+        "srbreakout",
+        "breakoutretest",
+        "trianglebreakout",
+        "flagpennant",
+        "headshoulders",
+        "doubletopbottom",
+        "tripletopbottom",
+        "wedgebreakout",
+        "cupandhandle",
+        "rectanglebreakout",
+        "channelbreakout",
+        "channelreversal",
+        "broadeningformation",
+        "diamondpattern",
+        "roundingpattern",
+        "failedbreakout",
+        "consolidationbreakout"
+      ]
+    ],
+    [
+      "03",
+      "CANDLESTICK STRATEGIES",
+      "Single- and multi-candle reversal signals read at key levels.",
+      [
+        "pinbar",
+        "engulfing",
+        "insidebargeneric",
+        "morningeveningstar"
+      ]
+    ],
+    [
+      "04",
+      "EMA & MOVING AVERAGE",
+      "A full family of moving-average setups, from fast crossovers to long-term regime filters.",
+      [
+        "ema9x21",
+        "ema20pullback",
+        "ema50trend",
+        "ema200filter",
+        "ema2050cross",
+        "goldendeathcross",
+        "emaribbon"
+      ]
+    ],
+    [
+      "05",
+      "MOMENTUM OSCILLATORS — RSI, MACD, STOCHASTIC",
+      "Momentum-based entries, reversals and divergence reads.",
+      [
+        "rsireversal",
+        "rsi50trend",
+        "rsidivergence",
+        "macdcross",
+        "macdzero",
+        "macddivergence",
+        "stochreversal"
+      ]
+    ],
+    [
+      "06",
+      "VOLATILITY — BOLLINGER BANDS & ATR",
+      "Trading with volatility expansion, contraction, and adaptive risk sizing.",
+      [
+        "bbmeanreversion",
+        "bbsqueeze",
+        "atrstoploss",
+        "atrtrailing"
+      ]
+    ],
+    [
+      "07",
+      "VWAP STRATEGIES",
+      "Intraday setups built around the volume-weighted average price.",
+      [
+        "vwapreclaim",
+        "vwaprejection",
+        "vwaporb",
+        "anchoredvwap"
+      ]
+    ],
+    [
+      "08",
+      "VOLUME STRATEGIES",
+      "Reading volume as confirmation — or as a warning of exhaustion.",
+      [
+        "volumebreakout",
+        "volumespike",
+        "lowvolumepullback"
+      ]
+    ],
+    [
+      "09",
+      "TREND STRENGTH & ICHIMOKU",
+      "Confirming whether a trend is strong enough to trade, and reading Ichimoku cloud structure.",
+      [
+        "adxtrendfilter",
+        "ichimokubreakout",
+        "tenkankijun"
+      ]
+    ],
+    [
+      "10",
+      "FIBONACCI STRATEGIES",
+      "Retracement-based pullback entries, especially where multiple factors overlap.",
+      [
+        "fibretracement",
+        "fibemaconfluence"
+      ]
+    ],
+    [
+      "11",
+      "MARKET STRUCTURE",
+      "Reading swing structure directly — highs, lows, breaks and character changes.",
+      [
+        "hhhlstrategy",
+        "llhlstrategy",
+        "bos",
+        "choch"
+      ]
+    ],
+    [
+      "11b",
+      "LIQUIDITY & MARKET STRUCTURE (SMC)",
+      "Sweep-and-reclaim setups and retested structural breaks, framed in smart-money terms.",
+      [
+        "liquiditysweep",
+        "sfp",
+        "bosretest",
+        "chochretest",
+        "rangerejection",
+        "rangeexpansion"
+      ]
+    ],
+    [
+      "12",
+      "BREAKOUT & CHANNEL STRATEGIES",
+      "General-purpose breakout systems beyond the premium opening-range strategies.",
+      [
+        "genericorb",
+        "donchian"
+      ]
+    ],
+    [
+      "13",
+      "MEAN-REVERSION STRATEGIES",
+      "Fading extended moves back toward a mean, strictly in ranging conditions.",
+      [
+        "mameanreversion",
+        "bbmeanreversion2"
+      ]
+    ],
+    [
+      "14",
+      "TREND-FOLLOWING STRATEGIES",
+      "Riding an established trend with a long-term filter and a shorter-term entry.",
+      [
+        "matrendfollow",
+        "adxematrend"
+      ]
+    ],
+    [
+      "15",
+      "MULTI-INDICATOR CONFLUENCE",
+      "Stacking trend, momentum and confirmation tools into one complete system.",
+      [
+        "emarsi",
+        "emamacd",
+        "emarsimacd"
+      ]
+    ],
+    [
+      "16",
+      "PRICE ACTION + INDICATOR COMBOS",
+      "Pairing raw price structure with an indicator for higher-conviction entries.",
+      [
+        "srrsidivergence",
+        "breakoutvolema",
+        "ema20pinbar",
+        "ema50engulfing",
+        "ema200breakout",
+        "emastackstructure",
+        "emaribboncompression",
+        "rsifailureswing",
+        "macddivstructure",
+        "macdhistogram",
+        "bbsrreversal"
+      ]
+    ],
+    [
+      "17",
+      "MULTI-TIMEFRAME & WAVE-BASED",
+      "A four-factor framework — momentum, pattern, price and time all have to agree before a setup counts.",
+      [
+        "dualmomentum",
+        "abccorrection",
+        "fivewave",
+        "dynamictime",
+        "trailingentry",
+        "swingbreakout"
+      ]
+    ],
+    [
+      "18",
+      "OTHER / EXPERIMENTAL",
+      "A few setups that don't fit neatly into the categories above.",
+      [
+        "s2short",
+        "btcmacro",
+        "monthlyswitch"
+      ]
+    ]
+  ]
+};
+
+  // ---------- structure diagrams ----------
+  const DIAGRAM_DEFS = {
+    sr_bounce: {
+      path: [[0,45],[20,58],[35,78],[48,60],[62,42],[78,28],[92,18],[100,14]],
+      levels: [{y:78,label:'SUPPORT'}],
+      markers: [{x:42,y:62,type:'entry'},{x:35,y:90,type:'stop'},{x:95,y:15,type:'target'}]
+    },
+    sr_breakout: {
+      path: [[0,70],[18,55],[32,58],[46,52],[60,56],[72,38],[84,32],[100,12]],
+      levels: [{y:55,label:'RESISTANCE'}],
+      markers: [{x:72,y:38,type:'entry'},{x:60,y:58,type:'stop'},{x:100,y:10,type:'target'}]
+    },
+    breakout_retest: {
+      path: [[0,72],[18,55],[34,58],[48,32],[58,40],[68,52],[76,42],[100,14]],
+      levels: [{y:52,label:'BROKEN LEVEL'}],
+      markers: [{x:76,y:42,type:'entry'},{x:68,y:56,type:'stop'},{x:100,y:12,type:'target'}]
+    },
+    triangle: {
+      path: [[0,25],[12,58],[24,38],[36,55],[46,42],[56,52],[66,44],[76,50],[86,28],[100,8]],
+      markers: [{x:86,y:28,type:'entry'},{x:76,y:53,type:'stop'},{x:100,y:6,type:'target'}]
+    },
+    flag_pennant: {
+      path: [[0,92],[14,25],[28,38],[38,32],[48,40],[58,34],[68,42],[82,22],[100,4]],
+      levels: [{y:37,label:'FLAG'}],
+      markers: [{x:82,y:22,type:'entry'},{x:68,y:45,type:'stop'},{x:100,y:2,type:'target'}]
+    },
+    head_shoulders: {
+      path: [[0,58],[12,32],[24,55],[38,12],[50,55],[62,35],[75,58],[88,72],[100,88]],
+      levels: [{y:56,label:'NECKLINE'}],
+      markers: [{x:75,y:58,type:'entry'},{x:62,y:33,type:'stop'},{x:100,y:90,type:'target'}]
+    },
+    double_top_bottom: {
+      path: [[0,72],[16,22],[32,48],[48,20],[64,48],[80,68],[100,88]],
+      levels: [{y:48,label:'NECKLINE'}],
+      markers: [{x:80,y:68,type:'entry'},{x:64,y:18,type:'stop'},{x:100,y:90,type:'target'}]
+    },
+    triple_top_bottom: {
+      path: [[0,70],[12,22],[26,48],[40,24],[54,48],[68,25],[82,50],[92,66],[100,85]],
+      levels: [{y:48,label:'NECKLINE'}],
+      markers: [{x:92,y:66,type:'entry'},{x:68,y:22,type:'stop'},{x:100,y:88,type:'target'}]
+    },
+    wedge: {
+      path: [[0,82],[14,60],[28,66],[40,44],[52,52],[64,34],[74,42],[84,55],[100,76]],
+      levels: [{y:48,label:'WEDGE'}],
+      markers: [{x:84,y:55,type:'entry'},{x:74,y:37,type:'stop'},{x:100,y:80,type:'target'}]
+    },
+    cup_handle: {
+      path: [[0,28],[14,52],[28,70],[42,70],[56,52],[68,30],[76,42],[84,36],[100,8]],
+      levels: [{y:34,label:'HANDLE'}],
+      markers: [{x:84,y:36,type:'entry'},{x:76,y:45,type:'stop'},{x:100,y:6,type:'target'}]
+    },
+    rectangle: {
+      path: [[0,58],[14,34],[28,58],[42,36],[56,58],[70,35],[82,28],[100,8]],
+      levels: [{y:35,label:'RESISTANCE'},{y:58,label:'SUPPORT'}],
+      markers: [{x:82,y:28,type:'entry'},{x:70,y:40,type:'stop'},{x:100,y:6,type:'target'}]
+    },
+    channel_breakout: {
+      path: [[0,72],[16,40],[32,66],[48,38],[64,62],[76,34],[88,18],[100,6]],
+      overlays: [{path:[[0,64],[100,10]],dash:true},{path:[[0,80],[100,26]],dash:true}],
+      markers: [{x:88,y:18,type:'entry'},{x:76,y:36,type:'stop'},{x:100,y:4,type:'target'}]
+    },
+    channel_reversal: {
+      path: [[0,20],[14,44],[28,30],[42,54],[56,38],[68,60],[78,42],[88,28],[100,14]],
+      overlays: [{path:[[0,32],[100,68]],dash:true}],
+      levels: [{y:58,label:'CHANNEL LOW'}],
+      markers: [{x:78,y:42,type:'entry'},{x:68,y:62,type:'stop'},{x:100,y:12,type:'target'}]
+    },
+    broadening: {
+      path: [[0,50],[10,30],[20,68],[34,18],[48,78],[62,10],[76,85],[88,25],[100,60]],
+      markers: [{x:88,y:25,type:'entry'},{x:76,y:88,type:'stop'},{x:100,y:15,type:'target'}]
+    },
+    diamond: {
+      path: [[0,50],[14,35],[26,62],[38,25],[50,72],[62,35],[74,55],[84,48],[100,20]],
+      levels: [{y:48,label:'DIAMOND'}],
+      markers: [{x:84,y:48,type:'entry'},{x:74,y:58,type:'stop'},{x:100,y:16,type:'target'}]
+    },
+    rounding: {
+      path: [[0,25],[15,45],[30,62],[45,68],[60,62],[75,45],[88,25],[100,8]],
+      levels: [{y:38,label:'RESISTANCE'}],
+      markers: [{x:88,y:25,type:'entry'},{x:75,y:48,type:'stop'},{x:100,y:5,type:'target'}]
+    },
+    failed_breakout: {
+      path: [[0,60],[20,45],[35,50],[50,30],[62,56],[75,40],[100,12]],
+      levels: [{y:48,label:'LEVEL'}],
+      markers: [{x:62,y:56,type:'entry'},{x:50,y:28,type:'stop'},{x:100,y:10,type:'target'}]
+    },
+    inside_bar: {
+      path: [[0,55],[20,40],[35,46],[45,43],[55,45],[65,43],[80,25],[100,8]],
+      levels: [{y:44,label:'INSIDE BAR'}],
+      markers: [{x:80,y:25,type:'entry'},{x:65,y:47,type:'stop'},{x:100,y:5,type:'target'}]
+    },
+    star_reversal: {
+      path: [[0,25],[20,50],[35,60],[50,58],[65,40],[80,20],[100,10]],
+      markers: [{x:50,y:58,type:'entry'},{x:35,y:64,type:'stop'},{x:100,y:8,type:'target'}]
+    },
+    ema_crossover: {
+      path: [[0,70],[20,60],[40,50],[55,42],[70,30],[85,20],[100,10]],
+      overlays: [
+        {path:[[0,64],[30,56],[55,44],[75,26],[100,12]],dash:true},
+        {path:[[0,74],[35,60],[60,52],[80,36],[100,20]],dash:true}
+      ],
+      markers: [{x:55,y:42,type:'entry'},{x:40,y:53,type:'stop'},{x:100,y:8,type:'target'}]
+    },
+    ema_pullback: {
+      path: [[0,80],[15,55],[30,40],[42,52],[55,44],[65,56],[75,46],[100,10]],
+      overlays: [{path:[[0,70],[25,48],[50,45],[75,40],[100,15]],dash:true}],
+      levels: [{y:44,label:'EMA'}],
+      markers: [{x:65,y:56,type:'entry'},{x:75,y:60,type:'stop'},{x:100,y:8,type:'target'}]
+    },
+    ema_ribbon: {
+      path: [[0,70],[15,55],[30,50],[45,48],[55,50],[65,47],[80,30],[100,10]],
+      overlays: [
+        {path:[[0,66],[30,52],[60,49],[80,34],[100,14]],dash:true},
+        {path:[[0,74],[30,54],[60,53],[80,38],[100,18]],dash:true}
+      ],
+      markers: [{x:80,y:30,type:'entry'},{x:65,y:52,type:'stop'},{x:100,y:8,type:'target'}]
+    },
+    divergence: {
+      path: [[0,28],[20,50],[40,32],[60,68],[80,45],[100,20]],
+      markers: [{x:60,y:68,type:'entry'},{x:60,y:80,type:'stop'},{x:100,y:15,type:'target'}],
+      subpanel: {
+        label: 'RSI / MACD',
+        path: [[0,45],[20,60],[40,55],[60,42],[80,55],[100,30]],
+        thresholds: [{y:25,label:'70'},{y:75,label:'30'}],
+        markers: [{x:20,y:60},{x:60,y:42}]
+      }
+    },
+    oscillator: {
+      path: [[0,70],[20,60],[40,50],[55,42],[70,35],[85,25],[100,15]],
+      markers: [{x:55,y:42,type:'entry'},{x:40,y:53,type:'stop'},{x:100,y:12,type:'target'}],
+      subpanel: {
+        label: 'RSI / ADX / MACD',
+        path: [[0,55],[20,48],[40,52],[55,45],[70,40],[85,30],[100,22]],
+        thresholds: [{y:25,label:'70'},{y:75,label:'30'}]
+      }
+    },
+    bollinger_squeeze: {
+      path: [[0,55],[20,50],[35,52],[48,49],[60,51],[72,48],[85,25],[100,8]],
+      overlays: [
+        {path:[[0,35],[35,40],[60,38],[85,20],[100,4]],dash:true},
+        {path:[[0,72],[35,62],[60,60],[85,45],[100,20]],dash:true}
+      ],
+      markers: [{x:85,y:25,type:'entry'},{x:72,y:50,type:'stop'},{x:100,y:5,type:'target'}]
+    },
+    volatility: {
+      path: [[0,75],[15,60],[30,68],[45,45],[60,52],[75,30],[90,20],[100,8]],
+      overlays: [
+        {path:[[0,55],[15,42],[30,50],[45,28],[60,35],[75,15],[90,8],[100,2]],dash:true},
+        {path:[[0,90],[15,75],[30,82],[45,60],[60,66],[75,42],[90,32],[100,18]],dash:true}
+      ],
+      markers: [{x:60,y:52,type:'entry'},{x:60,y:70,type:'stop'},{x:100,y:6,type:'target'}]
+    },
+    vwap_reclaim: {
+      path: [[0,35],[15,55],[30,72],[42,60],[52,68],[62,50],[75,38],[100,15]],
+      overlays: [{path:[[0,50],[100,45]],dash:true}],
+      levels: [{y:48,label:'VWAP'}],
+      markers: [{x:62,y:50,type:'entry'},{x:52,y:70,type:'stop'},{x:100,y:12,type:'target'}]
+    },
+    volume_spike: {
+      path: [[0,60],[20,40],[35,55],[50,30],[65,50],[80,20],[100,8]],
+      markers: [{x:65,y:50,type:'entry'},{x:50,y:33,type:'stop'},{x:100,y:5,type:'target'}],
+      subpanel: {
+        label: 'VOLUME',
+        bars: [{x:5,h:20},{x:15,h:25},{x:25,h:22},{x:35,h:55},{x:45,h:30},{x:55,h:28},{x:65,h:90},{x:75,h:35},{x:85,h:30},{x:95,h:25}]
+      }
+    },
+    volume_low: {
+      path: [[0,90],[20,50],[35,30],[50,38],[65,32],[80,20],[100,5]],
+      markers: [{x:80,y:20,type:'entry'},{x:65,y:35,type:'stop'},{x:100,y:3,type:'target'}],
+      subpanel: {
+        label: 'VOLUME',
+        bars: [{x:5,h:30},{x:15,h:85},{x:25,h:70},{x:35,h:40},{x:45,h:25},{x:55,h:20},{x:65,h:18},{x:75,h:55},{x:85,h:60},{x:95,h:65}]
+      }
+    },
+    ichimoku: {
+      path: [[0,60],[18,50],[34,58],[48,42],[62,48],[76,30],[88,22],[100,10]],
+      zone: {y1:38,y2:55,label:'CLOUD'},
+      markers: [{x:76,y:30,type:'entry'},{x:62,y:50,type:'stop'},{x:100,y:8,type:'target'}]
+    },
+    fibonacci: {
+      path: [[0,88],[22,18],[38,32],[50,45],[62,56],[80,25],[100,6]],
+      levels: [{y:32,label:'38.2%'},{y:45,label:'50%'},{y:56,label:'61.8%'}],
+      markers: [{x:62,y:56,type:'entry'},{x:62,y:68,type:'stop'},{x:100,y:4,type:'target'}]
+    },
+    market_structure: {
+      path: [[0,75],[15,55],[30,60],[45,38],[58,44],[70,25],[82,32],[100,12]],
+      markers: [{x:58,y:44,type:'entry'},{x:45,y:62,type:'stop'},{x:100,y:10,type:'target'}]
+    },
+    other_macro: {
+      path: [[0,60],[15,68],[30,45],[45,55],[60,35],[75,48],[90,25],[100,20]],
+      markers: [{x:60,y:35,type:'entry'},{x:45,y:58,type:'stop'},{x:100,y:15,type:'target'}]
+    }
+  };
+
+  const STRATEGY_DIAGRAM = {};
+  function mapDiagram(key, ids){ ids.forEach(id => { STRATEGY_DIAGRAM[id] = key; }); }
+  mapDiagram('sr_bounce', ['srbounce','pinbar','engulfing','rsireversal','stochreversal','bbmeanreversion','bbmeanreversion2','bbsrreversal','vwaprejection','mameanreversion','rangerejection']);
+  mapDiagram('sr_breakout', ['srbreakout','volumebreakout','breakoutvolema','genericorb','vwaporb','consolidationbreakout','rangeexpansion','donchian','nq927','us100orb','b2breakout']);
+  mapDiagram('breakout_retest', ['breakoutretest','bosretest','chochretest']);
+  mapDiagram('triangle', ['trianglebreakout']);
+  mapDiagram('flag_pennant', ['flagpennant']);
+  mapDiagram('head_shoulders', ['headshoulders']);
+  mapDiagram('double_top_bottom', ['doubletopbottom']);
+  mapDiagram('triple_top_bottom', ['tripletopbottom']);
+  mapDiagram('wedge', ['wedgebreakout']);
+  mapDiagram('cup_handle', ['cupandhandle']);
+  mapDiagram('rectangle', ['rectanglebreakout']);
+  mapDiagram('channel_breakout', ['channelbreakout']);
+  mapDiagram('channel_reversal', ['channelreversal']);
+  mapDiagram('broadening', ['broadeningformation']);
+  mapDiagram('diamond', ['diamondpattern']);
+  mapDiagram('rounding', ['roundingpattern']);
+  mapDiagram('failed_breakout', ['failedbreakout','liquiditysweep','sfp']);
+  mapDiagram('inside_bar', ['insidebargeneric']);
+  mapDiagram('star_reversal', ['morningeveningstar']);
+  mapDiagram('ema_crossover', ['ema9x21','ema2050cross','goldendeathcross','macdcross']);
+  mapDiagram('ema_pullback', ['ema20pullback','ema50trend','ema20pinbar','ema50engulfing','ema200breakout','emastackstructure','ema200filter','matrendfollow','adxematrend','emarsi','emamacd','emarsimacd']);
+  mapDiagram('ema_ribbon', ['emaribbon','emaribboncompression']);
+  mapDiagram('divergence', ['rsidivergence','macddivergence','srrsidivergence','macddivstructure']);
+  mapDiagram('oscillator', ['rsi50trend','adxtrendfilter','macdzero','macdhistogram','rsifailureswing']);
+  mapDiagram('bollinger_squeeze', ['bbsqueeze']);
+  mapDiagram('volatility', ['atrstoploss','atrtrailing']);
+  mapDiagram('vwap_reclaim', ['vwapreclaim','anchoredvwap']);
+  mapDiagram('volume_spike', ['volumespike']);
+  mapDiagram('volume_low', ['lowvolumepullback']);
+  mapDiagram('ichimoku', ['ichimokubreakout','tenkankijun']);
+  mapDiagram('fibonacci', ['fibretracement','fibemaconfluence']);
+  mapDiagram('market_structure', ['hhhlstrategy','llhlstrategy','bos','choch','dualmomentum','abccorrection','fivewave','dynamictime','trailingentry','swingbreakout']);
+  mapDiagram('other_macro', ['s2short','btcmacro','monthlyswitch']);
+
+  function renderDiagram(id){
+    const key = STRATEGY_DIAGRAM[id] || 'sr_breakout';
+    const def = DIAGRAM_DEFS[key];
+    if(!def) return '';
+    const W = 320;
+    const hasSub = !!def.subpanel;
+    const H = hasSub ? 190 : 150;
+    const padX = 18, padTop = 14;
+    const mainH = hasSub ? 96 : (H - padTop - 14);
+    const subTop = padTop + mainH + 22;
+    const subH = 46;
+    const sx = x => padX + (x/100) * (W - 2*padX);
+    const sy = y => padTop + (y/100) * mainH;
+    const ssy = y => subTop + (y/100) * subH;
+    const F = "font-family:'JetBrains Mono',monospace;";
+    let svg = '';
+
+    if(def.zone){
+      svg += `<rect x="${padX}" y="${sy(def.zone.y1)}" width="${W-2*padX}" height="${sy(def.zone.y2)-sy(def.zone.y1)}" fill="var(--grey-dim)" opacity="0.15"/>`;
+      if(def.zone.label) svg += `<text x="${W-padX}" y="${sy(def.zone.y1)-4}" text-anchor="end" font-size="7.5" style="${F}" fill="var(--grey-dim)">${def.zone.label}</text>`;
+    }
+    (def.levels||[]).forEach(l=>{
+      const yy = sy(l.y);
+      svg += `<line x1="${padX}" y1="${yy}" x2="${W-padX}" y2="${yy}" stroke="var(--grey-dim)" stroke-width="1" stroke-dasharray="3 4"/>`;
+      svg += `<text x="${padX}" y="${yy-4}" font-size="7.5" style="${F}" fill="var(--grey-dim)">${l.label}</text>`;
+    });
+    (def.overlays||[]).forEach(o=>{
+      const pts = o.path.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' ');
+      svg += `<polyline points="${pts}" fill="none" stroke="var(--grey)" stroke-width="1.2" stroke-dasharray="${o.dash?'4 3':'0'}" opacity="0.85"/>`;
+    });
+    const mainPts = def.path.map(p=>`${sx(p[0])},${sy(p[1])}`).join(' ');
+    svg += `<polyline points="${mainPts}" fill="none" stroke="var(--paper)" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>`;
+    (def.markers||[]).forEach(m=>{
+      const mx = sx(m.x), my = sy(m.y);
+      if(m.type==='entry'){
+        svg += `<circle cx="${mx}" cy="${my}" r="3.2" fill="var(--paper)"/>`;
+        svg += `<text x="${mx}" y="${my-8}" text-anchor="middle" font-size="7.5" style="${F}" fill="var(--paper)">ENTRY</text>`;
+      } else if(m.type==='stop'){
+        svg += `<line x1="${mx-4}" y1="${my-4}" x2="${mx+4}" y2="${my+4}" stroke="var(--grey)" stroke-width="1.3"/>`;
+        svg += `<line x1="${mx-4}" y1="${my+4}" x2="${mx+4}" y2="${my-4}" stroke="var(--grey)" stroke-width="1.3"/>`;
+        svg += `<text x="${mx}" y="${my+14}" text-anchor="middle" font-size="7.5" style="${F}" fill="var(--grey)">SL</text>`;
+      } else if(m.type==='target'){
+        svg += `<circle cx="${mx}" cy="${my}" r="3" fill="none" stroke="var(--paper)" stroke-width="1.2"/>`;
+        svg += `<text x="${mx}" y="${my-8}" text-anchor="middle" font-size="7.5" style="${F}" fill="var(--paper)">TARGET</text>`;
+      }
+    });
+
+    if(hasSub){
+      const sp = def.subpanel;
+      svg += `<line x1="${padX}" y1="${subTop-11}" x2="${W-padX}" y2="${subTop-11}" stroke="var(--line-soft)" stroke-width="1"/>`;
+      svg += `<text x="${padX}" y="${subTop-16}" font-size="8" style="${F}" fill="var(--grey-dim)">${sp.label}</text>`;
+      (sp.thresholds||[]).forEach(t=>{
+        const yy = ssy(t.y);
+        svg += `<line x1="${padX}" y1="${yy}" x2="${W-padX}" y2="${yy}" stroke="var(--grey-dim)" stroke-width="0.8" stroke-dasharray="2 3"/>`;
+        svg += `<text x="${W-padX}" y="${yy-2}" text-anchor="end" font-size="7" style="${F}" fill="var(--grey-dim)">${t.label}</text>`;
+      });
+      if(sp.bars){
+        const barW = (W-2*padX)/sp.bars.length * 0.55;
+        sp.bars.forEach(b=>{
+          const bx = sx(b.x);
+          const bh = (b.h/100) * subH;
+          svg += `<rect x="${bx-barW/2}" y="${subTop+subH-bh}" width="${barW}" height="${bh}" fill="var(--grey)" opacity="0.8"/>`;
+        });
+      }
+      if(sp.path){
+        const spPts = sp.path.map(p=>`${sx(p[0])},${ssy(p[1])}`).join(' ');
+        svg += `<polyline points="${spPts}" fill="none" stroke="var(--grey)" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/>`;
+      }
+      (sp.markers||[]).forEach(m=>{
+        svg += `<circle cx="${sx(m.x)}" cy="${ssy(m.y)}" r="2.4" fill="var(--paper)"/>`;
+      });
+    }
+
+    return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+  }
+
+  const root = document.getElementById('categoriesRoot');
+  const catTitleById = {};
+
+  function cardHTML(id, delayClass){
+    const s = STRATEGY_DATA.strategies[id];
+    catTitleById[id] = null; // filled after category loop
+    const premiumTag = s.premium ? '<span class="strat-premium-tag">PREMIUM</span>' : '';
+    return `
+      <div class="strat-card reveal ${delayClass}" data-tags="${(s.title + ' ' + s.tags).toLowerCase()}" data-strategy="${id}">
+        ${premiumTag}
+        <h3>${s.title}</h3>
+        <p>${s.desc}</p>
+        <div class="strat-meta"><span>${s.market || 'Any market'}</span></div>
+        <div class="strat-card-open">View rules →</div>
+      </div>`;
+  }
+
+  let categoriesHTML = '';
+  STRATEGY_DATA.categories.forEach((cat, catIdx) => {
+    const [num, title, note, ids] = cat;
+    ids.forEach(id => { catTitleById[id] = title; });
+    const isLast = catIdx === STRATEGY_DATA.categories.length - 1;
+    const delayClasses = ['', 'reveal-delay-1', 'reveal-delay-2'];
+    const cardsHTML = ids.map((id, i) => cardHTML(id, delayClasses[i % 3])).join('');
+    categoriesHTML += `
+    <section class="cat-block" data-cat="${num}"${isLast ? ' style="border-bottom:none;"' : ''}>
+      <div class="wrap">
+        <div class="cat-head reveal">
+          <div>
+            <div class="cat-num">${num} — ${title}</div>
+            <h2>${title.charAt(0) + title.slice(1).toLowerCase()}</h2>
+          </div>
+          <div class="cat-note">${note}</div>
+        </div>
+        <div class="strat-grid">${cardsHTML}</div>
+      </div>
+    </section>`;
+  });
+  root.innerHTML = categoriesHTML;
+
+  // ---------- scroll reveal ----------
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+  // ---------- search ----------
+  const searchInput = document.getElementById('strategySearch');
+  const clearBtn = document.getElementById('searchClear');
+  const noResults = document.getElementById('noResults');
+  const searchCount = document.getElementById('searchCount');
+  const searchHint = document.getElementById('searchHint');
+  const cards = Array.from(document.querySelectorAll('.strat-card'));
+  const catBlocks = Array.from(document.querySelectorAll('.cat-block'));
+
+  function cardText(card){
+    const title = card.querySelector('h3')?.textContent || '';
+    const desc = card.querySelector('p')?.textContent || '';
+    const tags = card.dataset.tags || '';
+    return (title + ' ' + desc + ' ' + tags).toLowerCase();
+  }
+
+  function runSearch(){
+    const q = searchInput.value.trim().toLowerCase();
+    clearBtn.classList.toggle('show', q.length > 0);
+
+    if(!q){
+      cards.forEach(c => c.classList.remove('hidden'));
+      catBlocks.forEach(b => b.classList.remove('hidden'));
+      noResults.classList.remove('show');
+      searchCount.classList.remove('show');
+      searchHint.style.display = '';
+      return;
+    }
+
+    searchHint.style.display = 'none';
+    const terms = q.split(/\s+/).filter(Boolean);
+    let visibleCount = 0;
+
+    catBlocks.forEach(block => {
+      const blockCards = cards.filter(c => block.contains(c));
+      let blockHasMatch = false;
+
+      blockCards.forEach(card => {
+        const text = cardText(card);
+        const matches = terms.every(t => text.includes(t));
+        card.classList.toggle('hidden', !matches);
+        if(matches){ blockHasMatch = true; visibleCount++; }
+      });
+
+      block.classList.toggle('hidden', !blockHasMatch);
+    });
+
+    noResults.classList.toggle('show', visibleCount === 0);
+    searchCount.classList.toggle('show', visibleCount > 0);
+    searchCount.textContent = visibleCount + (visibleCount === 1 ? ' strategy found' : ' strategies found') + ' for “' + searchInput.value.trim() + '”';
+  }
+
+  searchInput.addEventListener('input', runSearch);
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    runSearch();
+    searchInput.focus();
+  });
+
+  // ---------- strategy detail modal ----------
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalClose = document.getElementById('modalClose');
+  const modalStatus = document.getElementById('modalStatus');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalMeta = document.getElementById('modalMeta');
+  const modalNote = document.getElementById('modalNote');
+
+  function openModal(id){
+    const d = STRATEGY_DATA.strategies[id];
+    if(!d) return;
+    modalStatus.textContent = catTitleById[id] || '';
+    modalStatus.className = 'modal-status';
+    modalTitle.textContent = d.title;
+    modalDesc.textContent = d.desc;
+    modalMeta.innerHTML = `<span>Market: <b>${d.market || 'Any market'}</b></span>`;
+    document.getElementById('modalDiagram').innerHTML = renderDiagram(id);
+
+    if(d.premium){
+      document.getElementById('modalRules').innerHTML = `
+        <div class="premium-lock">
+          <div class="premium-lock-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          </div>
+          <p class="premium-lock-title">Entry &amp; exit rules are part of the premium report.</p>
+          <p class="premium-lock-desc">This strategy's full rule set, trade log and backtest report are available as a paid strategy pack.</p>
+        </div>`;
+    } else {
+      document.getElementById('modalRules').innerHTML = `
+        <div class="modal-rules">
+          <div class="rules-col entry">
+            <h4>ENTRY RULES</h4>
+            <ul>${d.entry.map(r => `<li>${r}</li>`).join('')}</ul>
+          </div>
+          <div class="rules-col exit">
+            <h4>EXIT RULES</h4>
+            <ul>${d.exit.map(r => `<li>${r}</li>`).join('')}</ul>
+          </div>
+        </div>`;
+    }
+
+    modalNote.textContent = d.note || '';
+    modalOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+    modalOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.strat-card').forEach(card => {
+    card.setAttribute('tabindex', '0');
+    const id = card.dataset.strategy;
+    card.addEventListener('click', () => openModal(id));
+    card.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openModal(id); }
+    });
+  });
+
+  modalClose.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>
