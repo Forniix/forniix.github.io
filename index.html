@@ -312,31 +312,15 @@
     margin-right:auto;
   }
 
-  /* ---------- markets strip ---------- */
+  /* ---------- markets strip (live) ---------- */
   .ticker{
     border-top:1px solid var(--line-soft);
     border-bottom:1px solid var(--line-soft);
-    padding:22px 0;
+    min-height:78px;
     overflow:hidden;
-    white-space:nowrap;
   }
-  .ticker-track{
-    display:inline-flex;
-    gap:60px;
-    animation:ticker 34s linear infinite;
-    font-size:13px;
-    color:var(--grey);
-  }
-  .ticker-track span b{ color:var(--paper); margin-right:8px; }
-  .ticker-track .chg{ margin-left:8px; font-weight:600; }
-  .ticker-track .chg.up{ color:#8fd6a8; }
-  .ticker-track .chg.down{ color:#e3928f; }
-  @keyframes ticker{
-    from{ transform:translateX(0); }
-    to{ transform:translateX(-50%); }
-  }
-
-.ticker-note{
+  .ticker .tradingview-widget-container{ width:100%; }
+  .ticker-note{
     text-align:center;
     font-size:10.5px;
     color:var(--grey-dim);
@@ -621,9 +605,29 @@
 </header>
 
 <div class="ticker">
-  <div class="ticker-track" id="tickerTrack"></div>
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {
+      "symbols": [
+        { "proName": "NSE:NIFTY", "title": "NIFTY 50" },
+        { "proName": "NSE:BANKNIFTY", "title": "BANK NIFTY" },
+        { "proName": "BSE:SENSEX", "title": "SENSEX" },
+        { "proName": "NSE:INDIAVIX", "title": "INDIA VIX" },
+        { "proName": "FOREXCOM:NSXUSD", "title": "NASDAQ 100" },
+        { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500" },
+        { "proName": "FOREXCOM:DJI", "title": "DOW JONES" }
+      ],
+      "showSymbolLogo": false,
+      "isTransparent": true,
+      "displayMode": "adaptive",
+      "colorTheme": "dark",
+      "locale": "en"
+    }
+    </script>
+  </div>
 </div>
-<div class="ticker-note">Indicative levels · snapshot, not real-time · updated 17 Sep 2026</div>
+<div class="ticker-note">Live market data via TradingView · some exchanges may be delayed</div>
 
 <section id="philosophy">
   <div class="wrap">
@@ -911,20 +915,6 @@
   }, { threshold: 0.15 });
   revealEls.forEach(el=> io.observe(el));
 
-  // ticker content
-  const symbols = [
-    ['NIFTY 50', '23,274.10', '+0.24%', 'up'],
-    ['BANK NIFTY', '55,794.75', '−1.43%', 'down'],
-    ['GIFT NIFTY', '23,547.00', '−0.07%', 'down'],
-    ['SENSEX', '74,003.82', '−1.04%', 'down'],
-    ['NASDAQ COMP', '26,005.01', '−0.69%', 'down'],
-    ['DOW JONES', '51,910.60', '−0.97%', 'down'],
-    ['S&P 500', '7,582.48', '−0.49%', 'down'],
-    ['INDIA VIX', 'Vol. watch', '', ''],
-  ];
-  const track = document.getElementById('tickerTrack');
-  const build = () => symbols.map(([a,b,c,d])=>`<span><b>${a}</b>${b}${c ? `<i class="chg ${d}">${c}</i>` : ''}</span>`).join('');
-  track.innerHTML = build() + build();
 </script>
 
 </body>
