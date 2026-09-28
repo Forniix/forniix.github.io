@@ -593,6 +593,29 @@
   .verdict div.r b{ color:var(--paper); font-weight:500; }
   .nav-links a.cur{ opacity:1; }
   .pad-top{ margin-top:56px; }
+
+  /* strategy box */
+  .page-hero{ padding-bottom:50px; border-bottom:none; }
+  .strat-list{ padding-top:20px; }
+  .strat-box{ border:1px solid var(--line); background:rgba(12,12,13,.55); transition:border-color .3s; }
+  .strat-box:hover, .strat-box.open{ border-color:var(--grey); }
+  .strat-toggle{ all:unset; box-sizing:border-box; cursor:pointer; width:100%; display:flex; align-items:baseline; gap:18px 28px; flex-wrap:wrap; padding:34px 76px 34px 38px; position:relative; color:var(--paper); }
+  .strat-toggle:focus-visible{ outline:1px solid var(--paper); outline-offset:-6px; }
+  .strat-toggle .sn{ font-family:'Fraunces',serif; font-size:clamp(26px,3.4vw,36px); }
+  .strat-toggle .st{ font-size:12px; color:var(--grey); }
+  .strat-toggle .plus{ position:absolute; right:38px; top:50%; width:18px; height:18px; transform:translateY(-50%); }
+  .strat-toggle .plus::before, .strat-toggle .plus::after{ content:''; position:absolute; background:var(--paper); left:0; right:0; top:8px; height:1px; transition:transform .4s; }
+  .strat-toggle .plus::after{ transform:rotate(90deg); }
+  .strat-box.open .plus::after{ transform:rotate(0deg); }
+  .strat-panel{ display:grid; grid-template-rows:0fr; visibility:hidden; transition:grid-template-rows .6s cubic-bezier(.16,.8,.3,1), visibility 0s .6s; }
+  .strat-box.open .strat-panel{ grid-template-rows:1fr; visibility:visible; transition:grid-template-rows .6s cubic-bezier(.16,.8,.3,1); }
+  .strat-inner{ min-height:0; overflow:hidden; padding:0 38px; }
+  .strat-inner .hero-foot{ margin:10px auto 0; max-width:none; border-top:1px solid var(--line-soft); }
+  .strat-inner section{ padding:80px 0 20px; border-bottom:none; }
+  .strat-inner section:last-child{ padding-bottom:60px; }
+  .strat-inner .wrap{ padding:0; max-width:none; }
+  .strat-inner .section-head{ margin-bottom:46px; }
+  @media (max-width:720px){ .strat-toggle{ padding:26px 60px 26px 22px; } .strat-toggle .plus{ right:22px; } .strat-inner{ padding:0 18px; } }
 </style>
 </head>
 <body>
@@ -610,25 +633,33 @@
   <div class="wrap">
     <div class="hero-eyebrow reveal">BACKTESTED STRATEGIES</div>
     <h1 class="reveal reveal-delay-1">Results,<br><em>and nothing else.</em></h1>
-    <p class="hero-sub reveal reveal-delay-2">US 100 Buy Model on CME Mini NQ1!, January 2021 to December 2025. One contract per trade, long only, all figures in USD.</p>
-    <div class="hero-foot">
-      <div class="hero-foot-stat reveal reveal-delay-3"><b>$177,435</b>Total PnL</div>
-      <div class="hero-foot-stat reveal reveal-delay-3"><b>37.3%</b>Win rate</div>
-      <div class="hero-foot-stat reveal reveal-delay-3"><b>1.17</b>Profit factor</div>
-      <div class="hero-foot-stat reveal reveal-delay-3"><b>$35,487</b>Average per year</div>
-    </div>
+    <p class="hero-sub reveal reveal-delay-2">Select a strategy to open its backtested results.</p>
   </div>
 </header>
-
+<section class="tight strat-list">
+  <div class="wrap">
+    <div class="strat-box" id="sb1">
+      <button type="button" class="strat-toggle" aria-expanded="false" aria-controls="sp1">
+        <span class="sn">US 100 Buy Model</span>
+        <span class="st">CME Mini NQ1! · 2021–2025</span>
+        <span class="plus" aria-hidden="true"></span>
+      </button>
+      <div class="strat-panel" id="sp1"><div class="strat-inner">
+<div class="hero-foot">
+      <div class="hero-foot-stat"><b>$177,435</b>Total PnL</div>
+      <div class="hero-foot-stat"><b>37.3%</b>Win rate</div>
+      <div class="hero-foot-stat"><b>1.17</b>Profit factor</div>
+      <div class="hero-foot-stat"><b>$35,487</b>Average per year</div>
+    </div>
 <section id="year" class="tight">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head">
       <h2>Every year was profitable.</h2>
       <div class="section-note">Net PnL for each backtest year. Best year was 2023 at $69,465.</div>
     </div>
-    <div class="chart-card reveal"><h4>Net PnL by year</h4><div class="cap">USD, 1 contract</div><div id="cYear"></div></div>
-    <div class="tbl-wrap reveal"><table class="data" id="tYear"></table></div>
-    <div class="chart-grid reveal pad-top">
+    <div class="chart-card"><h4>Net PnL by year</h4><div class="cap">USD, 1 contract</div><div id="cYear"></div></div>
+    <div class="tbl-wrap"><table class="data" id="tYear"></table></div>
+    <div class="chart-grid pad-top">
       <div class="chart-card"><h4>Win rate by year</h4><div class="cap">Percent of winning trades</div><div id="cWR"></div></div>
       <div class="chart-card"><h4>Profit factor by year</h4><div class="cap">Gross profit divided by gross loss</div><div id="cPF"></div></div>
     </div>
@@ -637,33 +668,39 @@
 
 <section id="month" class="tight">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head">
       <h2>Some months carry the strategy.</h2>
       <div class="section-note">Each calendar month pooled across all five years. September lost money in four of the five years.</div>
     </div>
-    <div class="chart-grid reveal">
+    <div class="chart-grid">
       <div class="chart-card"><h4>Average PnL by calendar month</h4><div class="cap">USD per year, 2021 to 2025</div><div id="cAvg"></div></div>
       <div class="chart-card"><h4>Profitable years per month</h4><div class="cap">Out of 5</div><div id="cCons"></div></div>
     </div>
-    <div class="tbl-wrap reveal"><table class="data" id="tMonth"></table></div>
+    <div class="tbl-wrap"><table class="data" id="tMonth"></table></div>
 
-    <div class="strat-head pad-top reveal"><h3>Month by year</h3><div class="strategy-tag">PnL in USD</div></div>
-    <div class="tbl-wrap reveal" style="border-top:none;border:none"><div class="heat" id="heat"></div></div>
+    <div class="strat-head pad-top"><h3>Month by year</h3><div class="strategy-tag">PnL in USD</div></div>
+    <div class="tbl-wrap" style="border-top:none;border:none"><div class="heat" id="heat"></div></div>
   </div>
 </section>
 
 <section id="playbook" class="tight">
   <div class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head">
       <h2>How the twelve months rank.</h2>
       <div class="section-note">Months ranked by a combined score of average PnL, consistency, profit factor, drawdown and volatility.</div>
     </div>
-    <div class="chart-card reveal">
+    <div class="chart-card">
       <h4>Suitability score by month</h4>
       <div class="legend"><span><i style="background:#efeee9"></i>Go aggressive</span><span><i style="background:#8a8a86"></i>Normal size</span><span><i style="background:#8b6262"></i>Be a saint</span></div>
       <div id="cRank"></div>
     </div>
-    <div class="verdicts reveal" id="verdicts"></div>
+    <div class="verdicts" id="verdicts"></div>
+  </div>
+</section>
+
+
+      </div></div>
+    </div>
   </div>
 </section>
 
@@ -769,6 +806,9 @@ $('verdicts').innerHTML=grp.map(([t,c])=>`<div class="verdict"><h4>${t}</h4>`+
 // reveal
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.querySelectorAll('.strat-toggle').forEach(b=>b.addEventListener('click',()=>{
+  const box=b.closest('.strat-box'), open=box.classList.toggle('open'); b.setAttribute('aria-expanded',open);
+}));
 </script>
 </body>
 </html>
