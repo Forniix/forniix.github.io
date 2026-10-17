@@ -607,6 +607,21 @@
   .creator-why{ margin-top:46px; padding-top:40px; border-top:1px solid var(--line-soft); }
   .creator-why blockquote{ font-family:'Fraunces',serif; font-style:italic; font-weight:450; font-size:clamp(22px,2.6vw,28px); line-height:1.5; color:var(--paper); border:none; margin:0; }
   .creator-why cite{ display:block; font-style:normal; font-size:11px; color:var(--grey-dim); margin-top:18px; letter-spacing:.06em; text-transform:uppercase; }
+
+  .principle-quote{ max-width:760px; margin:60px auto 0; text-align:center; }
+  .principle-quote blockquote{ font-family:'Fraunces',serif; font-style:italic; font-weight:400; font-size:clamp(22px,3vw,30px); line-height:1.55; color:var(--paper); border:none; margin:0; }
+  .principle-quote cite{ display:block; font-style:normal; font-size:11px; color:var(--grey-dim); margin-top:20px; letter-spacing:.1em; text-transform:uppercase; }
+  .wave-wrap{ border:1px solid var(--line-soft); padding:30px 30px 14px; margin-top:54px; }
+  .wave-wrap .cap{ font-size:11px; color:var(--grey-dim); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
+  .wave-wrap svg{ width:100%; height:auto; display:block; }
+  .principle-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); margin-top:54px; }
+  @media (max-width:800px){ .principle-grid{ grid-template-columns:1fr; } }
+  .principle-cell{ background:var(--black); padding:34px 30px; }
+  .principle-cell svg{ width:26px; height:26px; stroke:var(--paper); fill:none; stroke-width:1.2; margin-bottom:20px; }
+  .principle-cell h3{ font-family:'Fraunces',serif; font-weight:450; font-size:18px; margin-bottom:10px; }
+  .principle-cell p{ font-size:13px; color:#b9b8b2; line-height:1.75; }
+  .principle-cta{ margin-top:54px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; border-top:1px solid var(--line-soft); padding-top:34px; }
+  .principle-cta p{ font-size:13.5px; color:var(--grey); max-width:460px; }
 </style>
 </head>
 <body>
@@ -626,7 +641,7 @@
   <div class="nav-links">
     <a href="#philosophy">Philosophy</a>
     <a href="#framework">Framework</a>
-    <a href="#results">Results</a>
+    <a href="#principles">Principles</a>
     <a href="#markets">Markets</a>
     <a href="backtested-strategies.html">Backtested Strategies</a>
     <a href="tracker.html">Tracker</a>
@@ -701,7 +716,7 @@
       </div>
       <div class="reveal reveal-delay-1">
         <p class="body-copy">FORNIX strategies begin with a single, mechanical idea — an opening range break, a fixed stop, a fixed target — and are then run against years of price data before they're allowed anywhere near a live chart.</p>
-        <p class="body-copy">The work leans on ICT-derived market-structure concepts, applied to opening ranges on index futures and Indian derivatives, then stress-tested month by month, year by year, side by side.</p>
+        <p class="body-copy">The work leans on classical price-action and market-structure reading, applied to opening ranges on index futures and Indian derivatives, then stress-tested month by month, year by year, side by side.</p>
       </div>
     </div>
 
@@ -804,63 +819,62 @@
   </div>
 </section>
 
-<section id="results">
+<section id="principles">
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <div class="section-num">03 — RESULTS</div>
-        <h2>Strategy backtests, in points and probability.</h2>
+        <div class="section-num">03 — FIRST PRINCIPLES</div>
+        <h2>The market doesn't owe anyone a return — it only offers a price.</h2>
       </div>
-      <div class="section-note">Figures are historical, 2021–2025 pooled unless stated. Past performance on backtested data does not guarantee future results.</div>
+      <div class="section-note">A short word on how FORNIX thinks about markets, before any chart or backtest enters the room. For the numbers themselves, see Backtested Strategies.</div>
     </div>
 
-    <div class="strategy-card reveal">
-      <div class="strategy-top">
-        <div class="strategy-name">NQ 9:27 Opening — Buy</div>
-        <div class="strategy-tag">NASDAQ FUTURES · 5YR</div>
+    <div class="grid-2">
+      <div class="reveal">
+        <p class="lede">A price is not a verdict. It is an offer — made fresh every session, by a counterparty with no obligation to be right.</p>
       </div>
-      <div class="stat-row">
-        <div><div class="stat-label">NET POINTS (5YR)</div><div class="stat-value pos">+7,595.9</div></div>
-        <div><div class="stat-label">BEST YEAR</div><div class="stat-value pos">+1,580.9</div></div>
-        <div><div class="stat-label">PROFIT FACTOR</div><div class="stat-value pos">1.17–1.31</div></div>
-        <div><div class="stat-label">SEASONAL (SAINT MODE)</div><div class="stat-value pos">+3,643.7</div></div>
+      <div class="reveal reveal-delay-1">
+        <p class="body-copy">Treat every quote as a mood rather than a fact, and the real question stops being "where will it go" and becomes "what am I actually being offered, and under what conditions has that offer historically paid off."</p>
+        <p class="body-copy">That question is answerable. Not perfectly, not for every regime, but with real data, across real years — which is the entire reason a backtest is worth running in the first place.</p>
       </div>
-      <div class="bars">
-        <div class="bar pos" style="height:63%"><div class="bar-label">'21</div></div>
-        <div class="bar pos" style="height:40%"><div class="bar-label">'22</div></div>
-        <div class="bar pos" style="height:100%"><div class="bar-label">'23</div></div>
-        <div class="bar pos" style="height:45%"><div class="bar-label">'24</div></div>
-        <div class="bar pos" style="height:38%"><div class="bar-label">'25</div></div>
-      </div>
-      <p class="strategy-desc">Buy at 9:27 AM, 50pt stop, 100pt target, trailed to breakeven after +50pts, EOD exit if neither hit. Five-year net sits at +7,595.9 points, with the seasonality filter (skipping historically weak pooled months: Feb, May, Jul, Sep, Nov, Dec) pushing it further to +3,643.7 points at a materially lower drawdown per-window — the base rule already carries an edge, and the calendar filter sharpens it.</p>
     </div>
 
-    <div class="strategy-card reveal">
-      <div class="strategy-top">
-        <div class="strategy-name">NQ 9:27 Opening — Sell</div>
-        <div class="strategy-tag">NASDAQ FUTURES · 5YR</div>
+    <div class="principle-grid">
+      <div class="principle-cell reveal">
+        <svg viewBox="0 0 24 24"><path d="M3 17c2-5 4-7 6-7s3 4 6 4 4-6 6-6"/></svg>
+        <h3>The market's moods aren't yours to keep</h3>
+        <p>Price swings between fear and enthusiasm far more than the businesses or indices underneath it do. A system's job is to take the market's offer only when the odds favor it — never to inherit its mood.</p>
       </div>
-      <div class="stat-row">
-        <div><div class="stat-label">NET POINTS (5YR)</div><div class="stat-value pos">+2,140.6</div></div>
-        <div><div class="stat-label">BEST YEAR</div><div class="stat-value pos">2024, +1,288.6</div></div>
-        <div><div class="stat-label">WORST YEAR</div><div class="stat-value neg">2023, −2,756.1</div></div>
-        <div><div class="stat-label">VS BUY SIDE</div><div class="stat-value neg">Smaller edge, more variance</div></div>
+      <div class="principle-cell reveal reveal-delay-1">
+        <svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M5 7l3 2M16 15l3 2M5 17l3-2M16 9l3-2"/><circle cx="12" cy="12" r="3"/></svg>
+        <h3>Margin of safety, quantified</h3>
+        <p>A discretionary trader asks for a cushion against being wrong. A backtest goes further — it measures exactly how often, and by how much, the cushion has held across every year it's been tested.</p>
       </div>
-      <p class="strategy-desc">Same mechanics, mirrored to the short side. Across 2021–2025 the sell variant is net positive but carries a rougher path than buy — a single sharp drawdown year (2023) offsets otherwise solid results. Switching sides by calendar month per the pooled seasonality plan (rather than running one side all year) nets +5,183.1 points over the same five years.</p>
+      <div class="principle-cell reveal reveal-delay-2">
+        <svg viewBox="0 0 24 24"><path d="M4 19h16M7 19V9M12 19V5M17 19v12"/></svg>
+        <h3>Evidence outranks opinion</h3>
+        <p>An opinion about tomorrow is free and worth exactly that. A five-year, month-by-month record of what a specific rule actually did costs real work — and is the only kind of confidence FORNIX deals in.</p>
+      </div>
     </div>
 
-    <div class="strategy-card reveal">
-      <div class="strategy-top">
-        <div class="strategy-name">US100 Opening Range Breakout</div>
-        <div class="strategy-tag">NASDAQ-100 · MULTI-YEAR · BUY & SELL</div>
-      </div>
-      <div class="stat-row">
-        <div><div class="stat-label">COVERAGE</div><div class="stat-value pos">2021–2026</div></div>
-        <div><div class="stat-label">VARIANTS</div><div class="stat-value pos">Buy + Sell</div></div>
-        <div><div class="stat-label">ANALYSIS</div><div class="stat-value pos">YoY + Seasonality</div></div>
-        <div><div class="stat-label">SCORING</div><div class="stat-value pos">Suitability-ranked</div></div>
-      </div>
-      <p class="strategy-desc">A multi-year opening-range framework, reported year-over-year with calendar-month seasonality and a suitability score per configuration — built to show where the strategy is structurally strong versus where it's merely surviving.</p>
+    <div class="wave-wrap reveal">
+      <div class="cap">Illustrative only — a reminder of price, not a forecast</div>
+      <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+        <line x1="0" y1="80" x2="900" y2="80" stroke="var(--line-soft)" stroke-width="1"/>
+        <path d="M0,95 C60,40 120,130 180,70 C240,20 300,110 360,85 C420,60 480,140 540,75 C600,25 660,100 720,60 C780,30 840,105 900,65"
+          fill="none" stroke="var(--grey)" stroke-width="1.4"/>
+        <path d="M0,80 L900,80" stroke="var(--line-soft)" stroke-width="1" stroke-dasharray="2 6"/>
+      </svg>
+    </div>
+
+    <div class="principle-quote reveal">
+      <blockquote>"In the short run the market is a voting machine on sentiment; over enough sessions, pooled across enough years, it starts to behave like a weighing machine on probability. A backtest is simply how you wait for the weighing to show."</blockquote>
+      <cite>On market philosophy</cite>
+    </div>
+
+    <div class="principle-cta reveal">
+      <p>Every strategy FORNIX runs is built on the principles above — then tested, year by year, until the numbers either hold or don't.</p>
+      <a href="backtested-strategies.html" class="btn">See the backtested results →</a>
     </div>
   </div>
 </section>
@@ -945,7 +959,7 @@
   <div class="wrap">
     <div class="section-head reveal">
       <div>
-        <div class="section-num">05 — THE CREATOR</div>
+        <div class="section-num">06 — THE CREATOR</div>
         <h2>Built by one person, for the desk he wished he had.</h2>
       </div>
       <div class="section-note">No team, no marketing budget — just a trader who kept rebuilding the same research in spreadsheets and decided to make it public.</div>
