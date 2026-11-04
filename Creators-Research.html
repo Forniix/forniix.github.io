@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FORNIX — Community Strategies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,450;0,9..144,600;1,9..144,450&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0c0c0d; --paper:#efeee9; --line:#333333; --line-soft:#1c1c1c;
+    --grey:#8a8a85; --grey-dim:#4a4a47;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    background:
+      radial-gradient(ellipse 120% 60% at 50% -10%, #232324 0%, transparent 55%),
+      linear-gradient(160deg, #101011 0%, #0a0a0b 45%, #131314 100%);
+    background-attachment:fixed; color:var(--paper);
+    font-family:'JetBrains Mono', monospace; font-size:15px; line-height:1.6;
+    padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:450;letter-spacing:-0.01em;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 32px;}
+  a{color:inherit;}
+  header{padding:56px 0 36px;border-bottom:1px solid var(--line-soft);}
+  .eyebrow{font-size:12px;color:var(--grey);display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .eyebrow::before{content:'';width:28px;height:1px;background:var(--grey-dim);}
+  h1{font-size:clamp(32px,5vw,52px);line-height:1.05;}
+  header p{margin-top:16px;max-width:520px;color:#c7c6c0;font-size:14px;line-height:1.7;}
 
+  section{padding:48px 0;border-bottom:1px solid var(--line-soft);}
+  h2{font-size:22px;margin-bottom:20px;}
+
+  form{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .full{grid-column:1/-1;}
+  @media (max-width:640px){form{grid-template-columns:1fr;}}
+  label{display:block;font-size:11px;color:var(--grey);margin-bottom:6px;letter-spacing:.02em;}
+  input,select,textarea{
+    width:100%;background:#0a0a0b;border:1px solid var(--line);border-radius:6px;
+    padding:11px 13px;color:var(--paper);font-family:'JetBrains Mono',monospace;font-size:13.5px;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--paper);}
+  textarea{resize:vertical;min-height:70px;}
+  select{appearance:none;}
+  button{
+    margin-top:6px;background:var(--paper);color:var(--black);border:none;border-radius:100px;
+    padding:13px 26px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;
+    cursor:pointer;justify-self:start;
+  }
+  button:disabled{opacity:.5;cursor:default;}
+  .form-msg{font-size:12.5px;color:var(--grey);margin-top:10px;grid-column:1/-1;min-height:16px;}
+
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+  .chip{
+    border:1px solid var(--line);border-radius:100px;padding:7px 16px;font-size:12px;color:var(--grey);
+    cursor:pointer;transition:all .2s;
+  }
+  .chip.active{background:var(--paper);color:var(--black);border-color:var(--paper);}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);}
+  @media (max-width:640px){.grid{grid-template-columns:1fr;}}
+  .card{background:#0a0a0b;padding:24px;display:flex;flex-direction:column;gap:10px;}
+  .card .tags{display:flex;gap:8px;flex-wrap:wrap;}
+  .tag{font-size:10px;letter-spacing:.03em;color:var(--grey);border:1px solid var(--line);border-radius:100px;padding:3px 10px;}
+  .card h3{font-size:18px;}
+  .card .perf{font-size:13px;color:var(--paper);}
+  .card .desc{font-size:12.5px;color:var(--grey);line-height:1.65;}
+  .card .by{font-size:11px;color:var(--grey-dim);border-top:1px solid var(--line-soft);padding-top:10px;margin-top:auto;}
+  .empty{color:var(--grey-dim);font-size:13px;padding:30px 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">FORNIX — COMMUNITY</div>
+    <h1>Submit your strategy.</h1>
+    <p>Share your edge — name it, show the performance, tag the market and instrument. Everyone browsing FORNIX sees it listed below.</p>
+  </header>
+
+  <section>
+    <h2>Submit a strategy</h2>
+    <form id="subForm">
+      <div><label>Strategy name</label><input id="f-title" required maxlength="80" placeholder="e.g. US500 9:27 ORB"></div>
+      <div><label>Your name</label><input id="f-author" required maxlength="60" placeholder="e.g. Harshit"></div>
+      <div><label>Market</label>
+        <select id="f-market"><option>Index</option><option>Forex</option><option>Crypto</option><option>Stocks</option><option>Commodities</option></select>
+      </div>
+      <div><label>Instrument type</label>
+        <select id="f-instrument"><option>Futures</option><option>Options</option><option>Spot / Cash</option><option>CFD</option></select>
+      </div>
+      <div><label>Net return / points</label><input id="f-return" required maxlength="40" placeholder="e.g. +1289 pts"></div>
+      <div><label>Win rate (%)</label><input id="f-winrate" type="number" min="0" max="100" step="0.1" required placeholder="e.g. 48"></div>
+      <div><label>Max drawdown (%)</label><input id="f-dd" type="number" min="0" max="100" step="0.1" required placeholder="e.g. 6"></div>
+      <div><label>Total trades</label><input id="f-trades" type="number" min="0" step="1" placeholder="e.g. 1228"></div>
+      <div><label>Backtest stage</label>
+        <select id="f-stage"><option>Backtested</option><option>Forward-tested</option><option>Live</option></select>
+      </div>
+      <div><label>Years of data backtested (min. 3)</label><input id="f-years" type="number" min="3" step="0.5" required placeholder="e.g. 5"></div>
+      <div class="full"><label>Data range</label><input id="f-range" maxlength="40" placeholder="e.g. 2021–2025"></div>
+      <div class="full"><label>Short description</label><textarea id="f-desc" maxlength="400" placeholder="One or two lines on the logic / setup"></textarea></div>
+      <div class="full"><button type="submit" id="submitBtn">Submit strategy</button></div>
+      <div class="form-msg" id="formMsg"></div>
+    </form>
+  </section>
+
+  <section style="border-bottom:none;">
+    <h2>Community strategies</h2>
+    <div class="filters" id="filters">
+      <div class="chip active" data-f="all">All</div>
+      <div class="chip" data-f="Index">Index</div>
+      <div class="chip" data-f="Forex">Forex</div>
+      <div class="chip" data-f="Crypto">Crypto</div>
+      <div class="chip" data-f="Stocks">Stocks</div>
+      <div class="chip" data-f="Commodities">Commodities</div>
+    </div>
+    <div class="grid" id="list"></div>
+    <div class="empty" id="emptyMsg" style="display:none;">No strategies yet — be the first to submit one above.</div>
+  </section>
+</div>
+
+<script>
+let db = null, allDocs = [], activeFilter = 'all';
+
+function esc(s){ return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function render(){
+  const list = document.getElementById('list');
+  const empty = document.getElementById('emptyMsg');
+  const docs = activeFilter === 'all' ? allDocs : allDocs.filter(d => d.data.market === activeFilter);
+  if(!docs.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  list.innerHTML = docs.slice().reverse().map(d => {
+    const s = d.data;
+    return `<div class="card">
+      <div class="tags"><span class="tag">${esc(s.market)}</span><span class="tag">${esc(s.instrument)}</span><span class="tag">${esc(s.stage)}</span><span class="tag">${esc(s.years)}+ yrs data</span></div>
+      <h3>${esc(s.title)}</h3>
+      <div class="perf">${esc(s.return_)} &middot; ${esc(s.winrate)}% win rate &middot; ${esc(s.dd)}% max DD${s.trades ? ' &middot; ' + esc(s.trades) + ' trades' : ''}</div>
+      <div class="desc" style="color:var(--grey-dim);">Backtested on ${esc(s.range || s.years + ' yrs')}</div>
+      ${s.desc ? `<div class="desc">${esc(s.desc)}</div>` : ''}
+      <div class="by">Submitted by ${esc(s.author)}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('filters').addEventListener('click', e=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  activeFilter = chip.dataset.f;
+  render();
+});
+
+async function init(){
+  try{
+    db = await claude.use('db');
+  }catch(e){ db = null; }
+  const msg = document.getElementById('formMsg');
+  if(!db){
+    msg.textContent = 'Sign in to submit a strategy. You can still browse below.';
+  }
+  if(db){
+    try{
+      db.collection('strategies').onSnapshot(docs => { allDocs = docs; render(); });
+    }catch(e){ msg.textContent = 'Could not load community strategies right now.'; }
+  }
+}
+init();
+
+document.getElementById('subForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
+  if(!db){ msg.textContent = 'Sign in to submit a strategy.'; return; }
+  const title = document.getElementById('f-title').value.trim();
+  const author = document.getElementById('f-author').value.trim();
+  const return_ = document.getElementById('f-return').value.trim();
+  const winrate = document.getElementById('f-winrate').value;
+  const dd = document.getElementById('f-dd').value;
+  const trades = document.getElementById('f-trades').value;
+  const stage = document.getElementById('f-stage').value;
+  const years = parseFloat(document.getElementById('f-years').value);
+  const range = document.getElementById('f-range').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const market = document.getElementById('f-market').value;
+  const instrument = document.getElementById('f-instrument').value;
+  if(!title || !author || !return_ || winrate==='' || dd===''){ msg.textContent = 'Please fill in strategy name, your name, return, win rate and drawdown.'; return; }
+  if(!years || years < 3){ msg.textContent = 'Strategy must be backtested on at least 3 years of data.'; return; }
+  btn.disabled = true; msg.textContent = 'Submitting…';
+  try{
+    const id = 's_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    await db.collection('strategies').doc(id).set({ title, author, market, instrument, return_, winrate, dd, trades, stage, years, range, desc, ts: Date.now() });
+    e.target.reset();
+    msg.textContent = 'Submitted — your strategy is now listed below.';
+  }catch(err){
+    msg.textContent = 'Could not submit — please try again.';
+  }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>
