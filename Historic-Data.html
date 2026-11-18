@@ -162,6 +162,7 @@
   .tf:hover{border-color:var(--grey);transform:translateX(4px);}
   .tf b{font-family:'Fraunces',serif;font-size:21px;font-weight:450;display:block;line-height:1.1;}
   .tf small{font-size:10.5px;color:var(--grey);}
+  .tf .pr{margin-left:auto;margin-right:14px;font-family:'Fraunces',serif;font-size:19px;}
   .tf i{width:14px;height:14px;border:1px solid var(--grey);border-radius:50%;position:relative;transition:all .3s;flex:none;}
   .tf.on{background:var(--paper);color:var(--black);border-color:var(--paper);}
   .tf.on small{color:#55554f;}
@@ -179,6 +180,17 @@
   .dl.busy .fill{transform:none;transition:none;background:#bdbcb6;}
   .dl.busy .bar{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--paper);z-index:0;}
   .fname{margin-top:12px;font-size:10.5px;color:var(--grey-dim);text-align:center;word-break:break-all;}
+
+  .rq{width:100%;margin-top:10px;padding:14px;border:1px dashed var(--grey);background:transparent;font-size:11px;letter-spacing:.2em;color:var(--grey);transition:all .3s;}
+  .rq:hover{border-color:var(--paper);color:var(--paper);}
+  .rq-box{display:none;margin-top:10px;gap:8px;flex-wrap:wrap;}
+  .rq-box.open{display:flex;}
+  .rq-chips{display:flex;gap:6px;flex-wrap:wrap;width:100%;}
+  .rq-chips button{font-size:10.5px;letter-spacing:.08em;border:1px solid var(--line);padding:6px 10px;color:var(--grey);background:transparent;transition:all .25s;}
+  .rq-chips button:hover,.rq-chips button.on{border-color:var(--paper);color:var(--paper);}
+  .rq-box input{flex:1;min-width:0;background:rgba(12,12,13,.6);border:1px solid var(--line);color:var(--paper);padding:12px 14px;font:inherit;font-size:12px;outline:none;}
+  .rq-box input:focus{border-color:var(--grey);}
+  .rq-send{padding:12px 18px;border:1px solid var(--paper);background:var(--paper);color:var(--black);font-size:11px;letter-spacing:.18em;}
 
   footer{position:relative;z-index:3;border-top:1px solid var(--line-soft);padding:30px 6vw;font-size:11px;letter-spacing:.1em;color:var(--grey-dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 
@@ -213,7 +225,7 @@
   <header class="hero wrap">
     <div class="eyebrow"><span class="dot"></span> MARKET DATA ARCHIVE <i></i></div>
     <h1 id="title" aria-label="Historic Data"></h1>
-    <p class="lede">Clean, ready-to-use price history for the markets we trade. Pick an asset class, choose an instrument, select your timeframe &mdash; then download.</p>
+    <p class="lede">Clean, ready-to-use price history for the markets we trade. Pick an asset class, choose an instrument, select your timeframe &mdash; then buy.</p>
     <div class="stats">
       <div class="stat"><b data-count="3">0</b><span>ASSET CLASSES</span></div>
       <div class="stat"><b id="instCount" data-count="0">0</b><span>INSTRUMENTS</span></div>
@@ -227,7 +239,7 @@
     <div class="steps">
       <div class="step on" id="s1"><em>01</em> ASSET CLASS</div>
       <div class="step" id="s2"><em>02</em> INSTRUMENT</div>
-      <div class="step" id="s3"><em>03</em> TIMEFRAME &amp; DOWNLOAD</div>
+      <div class="step" id="s3"><em>03</em> TIMEFRAME &amp; BUY</div>
     </div>
 
     <div class="tabs" id="tabs" role="tablist"><div class="pill" id="pill"></div></div>
@@ -258,10 +270,16 @@
         <div class="tf-list" id="tfList"></div>
         <button class="dl" id="dl">
           <div class="fill"></div><div class="bar"></div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
-          <span id="dlText">DOWNLOAD DATA</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12M6 8h12M6 13h4a4 4 0 0 0 0-5M9 13l7 8"/></svg>
+          <span id="dlText">BUY @ ₹350</span>
         </button>
         <div class="fname" id="fname"></div>
+        <button class="rq" id="rq">+ REQUEST A TIMEFRAME</button>
+        <div class="rq-box" id="rqBox">
+          <div class="rq-chips" id="rqChips"></div>
+          <input id="rqInput" type="text" maxlength="30" placeholder="Other timeframe, e.g. 1 Min, 1 Hour" aria-label="Requested timeframe">
+          <button class="rq-send" id="rqSend">SEND</button>
+        </div>
       </div>
     </div>
   </div>
@@ -274,10 +292,19 @@
    Or give an instrument a custom `files:{ '1D':'url', '15m':'url', '3m':'url' }`. */
 const FILE_BASE = 'data/';
 const TIMEFRAMES = [
-  {key:'1D',  label:'Daily',  sub:'1D candles · end-of-day'},
-  {key:'15m', label:'15 Min', sub:'15m candles · intraday swing'},
-  {key:'3m',  label:'3 Min',  sub:'3m candles · precision intraday'}
+  {key:'1D',  label:'Daily',  sub:'1D candles · end-of-day',        price:350},
+  {key:'15m', label:'15 Min', sub:'15m candles · intraday swing',   price:550},
+  {key:'3m',  label:'3 Min',  sub:'3m candles · precision intraday', price:850}
 ];
+/* Where the BUY button sends people. Put your payment link / WhatsApp / Razorpay / Instamojo URL here.
+   You can use {name}, {tf}, {price} placeholders, e.g.
+   'https://wa.me/91XXXXXXXXXX?text=' + encodeURIComponent('I want to buy {name} {tf} data @ Rs {price}') */
+const BUY_URL = '';   // <-- add your link
+/* Where timeframe requests go (WhatsApp / email / form). Placeholders: {name} {tf} */
+const REQUEST_URL = '';   // <-- add your link, e.g. 'https://wa.me/91XXXXXXXXXX?text=' + encodeURIComponent('Please add {tf} data for {name}')
+const REQUEST_OPTIONS = ['1 Min','5 Min','30 Min','1 Hour','4 Hour'];
+const fill=(u,m)=>Object.keys(m).reduce((a,k)=>a.split('{'+k+'}').join(m[k]).split('%7B'+k+'%7D').join(encodeURIComponent(m[k])),u);
+const priceOf = k => TIMEFRAMES.find(t=>t.key===k).price;
 
 const CLASSES = {
   crypto:{
@@ -424,11 +451,11 @@ function openModal(it){
   const list=$('#tfList');list.innerHTML='';
   TIMEFRAMES.forEach(t=>{
     const b=document.createElement('button');b.className='tf'+(t.key===tfSel?' on':'');b.dataset.k=t.key;
-    b.innerHTML=`<div><b>${t.label}</b><small>${t.sub}</small></div><i></i>`;
+    b.innerHTML=`<div><b>${t.label}</b><small>${t.sub}</small></div><span class="pr">₹${t.price}</span><i></i>`;
     b.onclick=()=>{tfSel=t.key;list.querySelectorAll('.tf').forEach(x=>x.classList.toggle('on',x===b));updateFile();};
     list.appendChild(b);
   });
-  resetDl();updateFile();
+  resetDl();updateFile();resetRq();
   overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');
   document.body.style.overflow='hidden';setStep(3);
   setTimeout(()=>$('#mClose').focus(),50);
@@ -440,8 +467,9 @@ function closeModal(){
   if(lastFocus)lastFocus.focus();
 }
 function updateFile(){
-  const f=fileFor(active,tfSel);
-  $('#fname').textContent=f.split('/').pop();
+  const t=TIMEFRAMES.find(x=>x.key===tfSel);
+  dlText.textContent='BUY @ ₹'+t.price;
+  $('#fname').textContent=active.name+' · '+t.label+' · CSV';
 }
 $('#mClose').onclick=closeModal;
 overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal();});
@@ -449,18 +477,33 @@ addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('
 
 /* download */
 const dl=$('#dl'),dlText=$('#dlText'),bar=dl.querySelector('.bar');
-function resetDl(){dl.classList.remove('busy');bar.style.transition='none';bar.style.width='0';dlText.textContent='DOWNLOAD DATA';}
+function resetDl(){dl.classList.remove('busy');bar.style.transition='none';bar.style.width='0';dlText.textContent='BUY @ ₹'+priceOf(tfSel);}
 dl.onclick=()=>{
   if(dl.classList.contains('busy'))return;
-  const url=fileFor(active,tfSel);
-  dl.classList.add('busy');dlText.textContent='PREPARING FILE…';
-  bar.style.transition='width 1.1s cubic-bezier(.2,.8,.2,1)';requestAnimationFrame(()=>bar.style.width='100%');
-  setTimeout(()=>{
-    dlText.textContent='✓ DOWNLOAD STARTED';
-    const a=document.createElement('a');a.href=url;a.download=url.split('/').pop();document.body.appendChild(a);a.click();a.remove();
-  },1150);
-  setTimeout(resetDl,3200);
+  const t=TIMEFRAMES.find(x=>x.key===tfSel);
+  if(!BUY_URL){dlText.textContent='SET BUY_URL IN CONFIG';setTimeout(resetDl,2500);return;}
+  const url=fill(BUY_URL,{name:active.name,tf:t.label,price:t.price});
+  dl.classList.add('busy');dlText.textContent='OPENING CHECKOUT…';
+  bar.style.transition='width .9s cubic-bezier(.2,.8,.2,1)';requestAnimationFrame(()=>bar.style.width='100%');
+  setTimeout(()=>{window.open(url,'_blank','noopener');},900);
+  setTimeout(resetDl,2600);
 };
+
+/* request a timeframe */
+const rq=$('#rq'),rqBox=$('#rqBox'),rqInput=$('#rqInput'),rqSend=$('#rqSend'),rqChips=$('#rqChips');
+REQUEST_OPTIONS.forEach(o=>{const b=document.createElement('button');b.textContent=o;
+  b.onclick=()=>{rqInput.value=o;rqChips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));};
+  rqChips.appendChild(b);});
+rq.onclick=()=>{const o=rqBox.classList.toggle('open');rq.textContent=o?'− CLOSE REQUEST':'+ REQUEST A TIMEFRAME';if(o)rqInput.focus();};
+function resetRq(){rqBox.classList.remove('open');rq.textContent='+ REQUEST A TIMEFRAME';rqInput.value='';rqSend.textContent='SEND';rqChips.querySelectorAll('button').forEach(x=>x.classList.remove('on'));}
+rqSend.onclick=()=>{
+  const v=rqInput.value.trim();
+  if(!v){rqInput.focus();return;}
+  if(!REQUEST_URL){rqSend.textContent='SET REQUEST_URL';setTimeout(()=>rqSend.textContent='SEND',2200);return;}
+  window.open(fill(REQUEST_URL,{name:active.name,tf:v}),'_blank','noopener');
+  rqSend.textContent='✓ SENT';setTimeout(resetRq,1800);
+};
+rqInput.addEventListener('keydown',e=>{if(e.key==='Enter')rqSend.click();});
 
 /* modal chart (animated draw) */
 function drawChart(id){
