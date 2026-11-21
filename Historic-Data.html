@@ -290,12 +290,48 @@
    Files are looked up at:  FILE_BASE + <id>_<timeframe>.csv
    e.g. data/nifty50_1D.csv, data/nifty50_15m.csv, data/nifty50_3m.csv
    Or give an instrument a custom `files:{ '1D':'url', '15m':'url', '3m':'url' }`. */
-const FILE_BASE = 'data/';
-const TIMEFRAMES = [
-  {key:'1D',  label:'Daily',  sub:'1D candles · end-of-day',        price:350},
-  {key:'15m', label:'15 Min', sub:'15m candles · intraday swing',   price:550},
-  {key:'3m',  label:'3 Min',  sub:'3m candles · precision intraday', price:850}
+/* ============ FORNIX SUPABASE CONFIG ============ */
+
+const SUPABASE_URL =
+  'https://dxefrzvvmbtmoolenkue.supabase.co';
+
+const SUPABASE_KEY = sb_publishable_BgTRRvJFHtDtQcV1MoSf7Q_PSbvv1a1;
+
+const PRODUCTS_API =
+  `${SUPABASE_URL}/functions/v1/get-products`;
+
+const REQUEST_OPTIONS = [
+  '1 Min',
+  '5 Min',
+  '30 Min',
+  '1 Hour',
+  '4 Hour'
 ];
+
+/* Asset class descriptions */
+
+const CLASS_INFO = {
+  crypto: {
+    label: 'CRYPTO',
+    note: 'Digital assets that trade around the clock.'
+  },
+  indices: {
+    label: 'INDICES',
+    note: 'Benchmark stock indices from global markets.'
+  },
+  forex: {
+    label: 'FOREX',
+    note: 'Major currency pairs from the global FX market.'
+  }
+};
+
+/* Dynamic product storage */
+
+let CLASSES = {};
+let allProducts = [];
+let current = 'indices';
+let active = null;
+let tfSel = null;
 /* Where the BUY button sends people. Put your payment link / WhatsApp / Razorpay / Instamojo URL here.
    You can use {name}, {tf}, {price} placeholders, e.g.
    'https://wa.me/91XXXXXXXXXX?text=' + encodeURIComponent('I want to buy {name} {tf} data @ Rs {price}') */
