@@ -697,10 +697,7 @@ function render(items) {
 const overlay = $('#overlay');
 let lastFocus = null, chartRAF = null;
 
-const dl = $('#dl');
 const dlText = $('#dlText');
-const bar = dl.querySelector('.bar');
-
 function formatPrice(tf) {
   const price = Number(tf.price);
   const currency = String(tf.currency || 'INR').trim();
