@@ -836,21 +836,70 @@ dl.onclick=()=>{
   setTimeout(resetDl,2600);
 };
 
-/* request a timeframe */
-const rq=$('#rq'),rqBox=$('#rqBox'),rqInput=$('#rqInput'),rqSend=$('#rqSend'),rqChips=$('#rqChips');
-REQUEST_OPTIONS.forEach(o=>{const b=document.createElement('button');b.textContent=o;
-  b.onclick=()=>{rqInput.value=o;rqChips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));};
-  rqChips.appendChild(b);});
-rq.onclick=()=>{const o=rqBox.classList.toggle('open');rq.textContent=o?'− CLOSE REQUEST':'+ REQUEST A TIMEFRAME';if(o)rqInput.focus();};
-function resetRq(){rqBox.classList.remove('open');rq.textContent='+ REQUEST A TIMEFRAME';rqInput.value='';rqSend.textContent='SEND';rqChips.querySelectorAll('button').forEach(x=>x.classList.remove('on'));}
-rqSend.onclick=()=>{
-  const v=rqInput.value.trim();
-  if(!v){rqInput.focus();return;}
-  if(!REQUEST_URL){rqSend.textContent='SET REQUEST_URL';setTimeout(()=>rqSend.textContent='SEND',2200);return;}
-  window.open(fill(REQUEST_URL,{name:active.name,tf:v}),'_blank','noopener');
-  rqSend.textContent='✓ SENT';setTimeout(resetRq,1800);
+/* ============ CUSTOM DATA REQUEST ============ */
+
+const rq = $('#rq');
+const rqBox = $('#rqBox');
+const rqInput = $('#rqInput');
+const rqSend = $('#rqSend');
+const rqChips = $('#rqChips');
+
+REQUEST_OPTIONS.forEach(option => {
+  const button = document.createElement('button');
+  button.textContent = option;
+
+  button.onclick = () => {
+    rqInput.value = option;
+
+    rqChips.querySelectorAll('button').forEach(item => {
+      item.classList.toggle('on', item === button);
+    });
+  };
+
+  rqChips.appendChild(button);
+});
+
+rq.onclick = () => {
+  const opened = rqBox.classList.toggle('open');
+
+  rq.textContent = opened
+    ? '− CLOSE REQUEST'
+    : '+ REQUEST A TIMEFRAME';
+
+  if (opened) rqInput.focus();
 };
-rqInput.addEventListener('keydown',e=>{if(e.key==='Enter')rqSend.click();});
+
+function resetRq() {
+  rqBox.classList.remove('open');
+  rq.textContent = '+ REQUEST A TIMEFRAME';
+  rqInput.value = '';
+  rqSend.textContent = 'SEND';
+
+  rqChips.querySelectorAll('button').forEach(button => {
+    button.classList.remove('on');
+  });
+}
+
+rqSend.onclick = () => {
+  const requestedTimeframe = rqInput.value.trim();
+
+  if (!requestedTimeframe) {
+    rqInput.focus();
+    return;
+  }
+
+  rqSend.textContent = 'REQUEST SERVICE NOT CONFIGURED';
+
+  setTimeout(() => {
+    rqSend.textContent = 'SEND';
+  }, 2500);
+};
+
+rqInput.addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    rqSend.click();
+  }
+});
 
 /* modal chart (animated draw) */
 function drawChart(id){
