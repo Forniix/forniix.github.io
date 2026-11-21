@@ -692,43 +692,136 @@ function render(items) {
   });
 }
 
-/* ============ modal ============ */
-const overlay=$('#overlay');
-let lastFocus=null,chartRAF=null;
-function fileFor(it,tf){return (it.files&&it.files[tf])||`${FILE_BASE}${it.id}_${tf}.csv`;}
-function openModal(it){
-  active=it;tfSel='1D';lastFocus=document.activeElement;
-  $('#mTag').textContent=CLASSES[current].label+' · '+it.sym;
-  $('#mTitle').textContent=it.name;
-  $('#mAbout').textContent=it.about;
-  $('#mChips').innerHTML=`<span>FORMAT <b>CSV</b></span><span>TIMEFRAMES <b>3</b></span><span>CLASS <b>${CLASSES[current].label}</b></span>`;
-  const list=$('#tfList');list.innerHTML='';
-  TIMEFRAMES.forEach(t=>{
-    const b=document.createElement('button');b.className='tf'+(t.key===tfSel?' on':'');b.dataset.k=t.key;
-    b.innerHTML=`<div><b>${t.label}</b><small>${t.sub}</small></div><span class="pr">₹${t.price}</span><i></i>`;
-    b.onclick=()=>{tfSel=t.key;list.querySelectorAll('.tf').forEach(x=>x.classList.toggle('on',x===b));updateFile();};
-    list.appendChild(b);
-  });
-  resetDl();updateFile();resetRq();
-  overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';setStep(3);
-  setTimeout(()=>$('#mClose').focus(),50);
-  requestAnimationFrame(()=>drawChart(it.id));
-}
-function closeModal(){
-  overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
-  document.body.style.overflow='';cancelAnimationFrame(chartRAF);setStep(2);
-  if(lastFocus)lastFocus.focus();
-}
-function updateFile(){
-  const t=TIMEFRAMES.find(x=>x.key===tfSel);
-  dlText.textContent='BUY @ ₹'+t.price;
-  $('#fname').textContent=active.name+' · '+t.label+' · CSV';
-}
-$('#mClose').onclick=closeModal;
-overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal();});
-addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))closeModal();});
+/* ============ DATABASE-DRIVEN MODAL ============ */
 
+const overlay = $('#overlay');
+let lastFocus = null, chartRAF = null;
+
+const dl = $('#dl');
+const dlText = $('#dlText');
+const bar = dl.querySelector('.bar');
+
+function formatPrice(tf) {
+  const price = Number(tf.price);
+  const currency = String(tf.currency || 'INR').trim();
+
+  try {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 2
+    }).format(price);
+  } catch {
+    return `${currency} ${price}`;
+  }
+}
+
+function openModal(it) {
+  active = it;
+  tfSel = it.timeframes[0]?.id || null;
+  lastFocus = document.activeElement;
+
+  $('#mTag').textContent = CLASSES[current].label + ' · ' + it.sym;
+  $('#mTitle').textContent = it.name;
+  $('#mAbout').textContent = it.about;
+
+  $('#mChips').innerHTML = '';
+
+  [
+    ['TIMEFRAMES', it.timeframes.length],
+    ['CLASS', CLASSES[current].label]
+  ].forEach(([label, value]) => {
+    const chip = document.createElement('span');
+    const bold = document.createElement('b');
+
+    chip.appendChild(document.createTextNode(label + ' '));
+    bold.textContent = value;
+    chip.appendChild(bold);
+    $('#mChips').appendChild(chip);
+  });
+
+  const list = $('#tfList');
+  list.innerHTML = '';
+
+  it.timeframes.forEach(tf => {
+    const button = document.createElement('button');
+    button.className = 'tf';
+    button.classList.toggle('on', tf.id === tfSel);
+
+    const info = document.createElement('div');
+    const label = document.createElement('b');
+    const dates = document.createElement('small');
+
+    label.textContent = tf.label;
+    dates.textContent =
+      `${tf.startDate || 'Start date unavailable'} → ${tf.endDate || 'End date unavailable'}`;
+
+    info.append(label, dates);
+
+    const price = document.createElement('span');
+    price.className = 'pr';
+    price.textContent = formatPrice(tf);
+
+    const indicator = document.createElement('i');
+
+    button.append(info, price, indicator);
+
+    button.addEventListener('click', () => {
+      tfSel = tf.id;
+
+      list.querySelectorAll('.tf').forEach(item => {
+        item.classList.toggle('on', item === button);
+      });
+
+      updateFile();
+    });
+
+    list.appendChild(button);
+  });
+
+  resetDl();
+  resetRq();
+
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  setStep(3);
+
+  setTimeout(() => $('#mClose').focus(), 50);
+  requestAnimationFrame(() => drawChart(it.id));
+}
+
+function updateFile() {
+  if (!active) return;
+
+  const tf = active.timeframes.find(item => item.id === tfSel);
+  if (!tf) return;
+
+  dlText.textContent = 'BUY · ' + formatPrice(tf);
+
+  $('#fname').textContent =
+    `${active.name} · ${tf.label} · ${tf.startDate || 'N/A'} — ${tf.endDate || 'N/A'}`;
+}
+
+function resetDl() {
+  dl.classList.remove('busy');
+  bar.style.transition = 'none';
+  bar.style.width = '0';
+  updateFile();
+}
+
+dl.onclick = () => {
+  if (dl.classList.contains('busy')) return;
+
+  dl.classList.add('busy');
+  dlText.textContent = 'CHECKOUT NOT CONFIGURED';
+
+  setTimeout(() => {
+    dl.classList.remove('busy');
+    updateFile();
+  }, 2500);
+};
 /* download */
 const dl=$('#dl'),dlText=$('#dlText'),bar=dl.querySelector('.bar');
 function resetDl(){dl.classList.remove('busy');bar.style.transition='none';bar.style.width='0';dlText.textContent='BUY @ ₹'+priceOf(tfSel);}
