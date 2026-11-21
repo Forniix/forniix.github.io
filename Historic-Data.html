@@ -271,7 +271,7 @@
         <button class="dl" id="dl">
           <div class="fill"></div><div class="bar"></div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12M6 8h12M6 13h4a4 4 0 0 0 0-5M9 13l7 8"/></svg>
-          <span id="dlText">BUY @ ₹350</span>
+          <span id="dlText">SELECT A TIMEFRAME</span>
         </button>
         <div class="fname" id="fname"></div>
         <button class="rq" id="rq">+ REQUEST A TIMEFRAME</button>
@@ -286,14 +286,7 @@
 </div>
 
 <script>
-/* ============ CONFIG — edit here ============
-   Files are looked up at:  FILE_BASE + <id>_<timeframe>.csv
-   e.g. data/nifty50_1D.csv, data/nifty50_15m.csv, data/nifty50_3m.csv
-   Or give an instrument a custom `files:{ '1D':'url', '15m':'url', '3m':'url' }`. */
-/* ============ FORNIX SUPABASE CONFIG ============ */
-
-
-/* ============ FORNIX SUPABASE CONFIG ============ */
+/* ============ CONFIG — edit here ============ */
 
 const SUPABASE_URL =
   'https://dxefrzvvmbtmoolenkue.supabase.co';
@@ -334,11 +327,6 @@ let allProducts = [];
 let current = 'indices';
 let active = null;
 let tfSel = null;
-
-/* Payment and request links — not configured yet */
-
-const BUY_URL = '';
-const REQUEST_URL = '';
 
 /* ============ SUPABASE PRODUCT LOADER ============ */
 
@@ -695,10 +683,11 @@ function render(items) {
 /* ============ DATABASE-DRIVEN MODAL ============ */
 
 const overlay = $('#overlay');
+const dl = $('#dl'), dlText = $('#dlText'), bar = dl.querySelector('.bar');
 let lastFocus = null, chartRAF = null;
 
-const overlay = $('#overlay');
-let lastFocus = null, chartRAF = null;
+function formatPrice(tf) {
+  const { price, currency } = tf;
   try {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -815,19 +804,6 @@ dl.onclick = () => {
     dl.classList.remove('busy');
     updateFile();
   }, 2500);
-};
-/* download */
-const dl=$('#dl'),dlText=$('#dlText'),bar=dl.querySelector('.bar');
-function resetDl(){dl.classList.remove('busy');bar.style.transition='none';bar.style.width='0';dlText.textContent='BUY @ ₹'+priceOf(tfSel);}
-dl.onclick=()=>{
-  if(dl.classList.contains('busy'))return;
-  const t=TIMEFRAMES.find(x=>x.key===tfSel);
-  if(!BUY_URL){dlText.textContent='SET BUY_URL IN CONFIG';setTimeout(resetDl,2500);return;}
-  const url=fill(BUY_URL,{name:active.name,tf:t.label,price:t.price});
-  dl.classList.add('busy');dlText.textContent='OPENING CHECKOUT…';
-  bar.style.transition='width .9s cubic-bezier(.2,.8,.2,1)';requestAnimationFrame(()=>bar.style.width='100%');
-  setTimeout(()=>{window.open(url,'_blank','noopener');},900);
-  setTimeout(resetDl,2600);
 };
 
 /* ============ CUSTOM DATA REQUEST ============ */
