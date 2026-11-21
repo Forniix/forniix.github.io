@@ -957,9 +957,37 @@ const glow=$('#glow');
 addEventListener('pointermove',e=>{glow.style.transform=`translate(${e.clientX-210}px,${e.clientY-210}px)`;});
 addEventListener('scroll',()=>{const m=document.documentElement.scrollHeight-innerHeight;$('#progress').style.width=(m>0?scrollY/m*100:0)+'%';},{passive:true});
 
-/* init */
-document.fonts&&document.fonts.ready.then(movePill);
-select('indices');
+/* ============ FORNIX INITIALIZATION ============ */
+
+async function initFornix() {
+  grid.textContent = 'Loading market data...';
+  note.textContent = 'Connecting to the Fornix data archive...';
+
+  try {
+    allProducts = await loadProducts();
+
+    CLASSES = groupProducts(allProducts);
+
+    updateStats();
+    buildTabs();
+
+    if (!Object.keys(CLASSES).length) {
+      note.textContent = 'No active products are available yet.';
+      grid.textContent = 'No active products found.';
+    }
+
+  } catch (error) {
+    console.error('Fornix loading error:', error);
+
+    note.textContent = 'Unable to load market data.';
+    grid.textContent =
+      'Could not connect to the Fornix data archive. Please refresh and try again.';
+  }
+}
+
+document.fonts && document.fonts.ready.then(movePill);
+
+initFornix();
 </script>
 </body>
 </html>
