@@ -292,10 +292,14 @@
    Or give an instrument a custom `files:{ '1D':'url', '15m':'url', '3m':'url' }`. */
 /* ============ FORNIX SUPABASE CONFIG ============ */
 
+
+/* ============ FORNIX SUPABASE CONFIG ============ */
+
 const SUPABASE_URL =
   'https://dxefrzvvmbtmoolenkue.supabase.co';
 
-const SUPABASE_KEY = sb_publishable_BgTRRvJFHtDtQcV1MoSf7Q_PSbvv1a1;
+const SUPABASE_KEY =
+  'sb_publishable_BgTRRvJFHtDtQcV1MoSf7Q_PSbvv1a1';
 
 const PRODUCTS_API =
   `${SUPABASE_URL}/functions/v1/get-products`;
@@ -307,8 +311,6 @@ const REQUEST_OPTIONS = [
   '1 Hour',
   '4 Hour'
 ];
-
-/* Asset class descriptions */
 
 const CLASS_INFO = {
   crypto: {
@@ -325,58 +327,93 @@ const CLASS_INFO = {
   }
 };
 
-/* Dynamic product storage */
+/* Dynamic database products */
 
 let CLASSES = {};
 let allProducts = [];
 let current = 'indices';
 let active = null;
 let tfSel = null;
-/* Where the BUY button sends people. Put your payment link / WhatsApp / Razorpay / Instamojo URL here.
-   You can use {name}, {tf}, {price} placeholders, e.g.
-   'https://wa.me/91XXXXXXXXXX?text=' + encodeURIComponent('I want to buy {name} {tf} data @ Rs {price}') */
-const BUY_URL = '';   // <-- add your link
-/* Where timeframe requests go (WhatsApp / email / form). Placeholders: {name} {tf} */
-const REQUEST_URL = '';   // <-- add your link, e.g. 'https://wa.me/91XXXXXXXXXX?text=' + encodeURIComponent('Please add {tf} data for {name}')
-const REQUEST_OPTIONS = ['1 Min','5 Min','30 Min','1 Hour','4 Hour'];
-const fill=(u,m)=>Object.keys(m).reduce((a,k)=>a.split('{'+k+'}').join(m[k]).split('%7B'+k+'%7D').join(encodeURIComponent(m[k])),u);
-const priceOf = k => TIMEFRAMES.find(t=>t.key===k).price;
 
-const CLASSES = {
-  crypto:{
-    label:'CRYPTO',
-    note:'Digital assets that trade around the clock — continuous history with no session gaps.',
-    items:[
-      {id:'btcusd', name:'Bitcoin', sym:'BTC / USD', about:'Bitcoin is the first and largest cryptocurrency, a decentralised digital asset secured by a proof-of-work blockchain with a fixed supply of 21 million coins. It trades 24/7 and is widely treated as the benchmark for the whole crypto market.'},
-      {id:'ethusd', name:'Ethereum', sym:'ETH / USD', about:'Ethereum is a programmable blockchain that powers smart contracts, decentralised apps and a large share of DeFi and NFT activity. Its native token, Ether, is the second-largest cryptocurrency by market value.'},
-      {id:'solusd', name:'Solana', sym:'SOL / USD', about:'Solana is a high-throughput blockchain built for fast, low-cost transactions. SOL is used for fees and staking on the network and is known for sharp, high-volatility moves.'},
-      {id:'xrpusd', name:'XRP', sym:'XRP / USD', about:'XRP is the native token of the XRP Ledger, designed for fast, low-cost cross-border payments and settlement between financial institutions.'}
-    ]
-  },
-  indices:{
-    label:'INDICES',
-    note:'Benchmark stock indices — the broad pulse of a market, and the home of our opening-range strategies.',
-    items:[
-      {id:'nifty50', name:'Nifty 50', sym:'NIFTY', about:'The Nifty 50 is India’s flagship benchmark index from the National Stock Exchange, tracking 50 of the largest and most liquid listed companies across sectors. It is free-float market-cap weighted and is the most widely followed gauge of the Indian equity market.'},
-      {id:'banknifty', name:'Bank Nifty', sym:'BANKNIFTY', about:'Bank Nifty tracks the most liquid and large-cap banking stocks listed on the NSE. It is highly sensitive to interest rates and credit conditions, and is one of the most actively traded index derivatives in India.'},
-      {id:'us100', name:'US100', sym:'NASDAQ 100', about:'The US100 follows the Nasdaq-100: the 100 largest non-financial companies listed on the Nasdaq exchange. It is heavily weighted toward technology and growth names, making it fast-moving and popular for intraday trading.'},
-      {id:'us500', name:'US500', sym:'S&P 500', about:'The US500 tracks the S&P 500, covering roughly 500 of the largest US companies and about 80% of the American equity market by value. It is the standard benchmark for US large-cap stocks.'},
-      {id:'us30', name:'US30', sym:'DOW JONES', about:'The US30 is the Dow Jones Industrial Average, a price-weighted index of 30 large, established US blue-chip companies. It is one of the oldest equity indices in the world.'},
-      {id:'ger40', name:'DAX 40', sym:'GER40', about:'The DAX 40 tracks the 40 largest German companies listed on the Frankfurt Stock Exchange and serves as the main barometer of the German and wider European economy.'}
-    ]
-  },
-  forex:{
-    label:'FOREX',
-    note:'The world’s most liquid market — major currency pairs, quoted as base / quote.',
-    items:[
-      {id:'eurusd', name:'EUR / USD', sym:'EURUSD', about:'The euro against the US dollar is the most traded currency pair in the world. It reflects the relative strength of the Eurozone and US economies and is known for tight spreads and deep liquidity.'},
-      {id:'gbpusd', name:'GBP / USD', sym:'GBPUSD', about:'Nicknamed “Cable”, the British pound against the US dollar is a major pair known for strong intraday volatility, especially around UK and US economic releases.'},
-      {id:'usdjpy', name:'USD / JPY', sym:'USDJPY', about:'The US dollar against the Japanese yen is a major pair heavily influenced by interest-rate differentials and the yen’s role as a global safe-haven currency.'},
-      {id:'audusd', name:'AUD / USD', sym:'AUDUSD', about:'The Australian dollar against the US dollar is a commodity-linked major pair, often moving with metals prices, Chinese demand and global risk appetite.'},
-      {id:'usdinr', name:'USD / INR', sym:'USDINR', about:'The US dollar against the Indian rupee is the key pair for India’s currency market, shaped by trade flows, foreign investment and RBI policy.'}
-    ]
+/* Payment and request links — not configured yet */
+
+const BUY_URL = '';
+const REQUEST_URL = '';
+
+/* ============ SUPABASE PRODUCT LOADER ============ */
+
+async function loadProducts() {
+  const response = await fetch(PRODUCTS_API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    },
+    body: JSON.stringify({})
+  });
+
+  if (!response.ok) {
+    throw new Error(`Supabase error: ${response.status}`);
   }
-};
+
+  const result = await response.json();
+
+  if (!result.success || !Array.isArray(result.products)) {
+    throw new Error('Invalid product response from Supabase');
+  }
+
+  return result.products;
+}
+
+/* Convert database rows into instrument cards */
+
+function groupProducts(rows) {
+  const grouped = {};
+
+  rows.forEach(row => {
+    const category = String(row.asset_class || '').toLowerCase();
+    if (!CLASS_INFO[category]) return;
+
+    const key = `${category}:${row.instrument}`;
+
+    if (!grouped[key]) {
+      grouped[key] = {
+        id: key,
+        name: row.name,
+        sym: row.symbol || row.instrument,
+        about: row.description || 'Historical market data.',
+        timeframes: [],
+        assetClass: category
+      };
+    }
+
+    grouped[key].timeframes.push({
+      id: row.id,
+      label: row.timeframe,
+      price: Number(row.price),
+      currency: row.currency || 'INR',
+      startDate: row.start_date,
+      endDate: row.end_date
+    });
+  });
+
+  const classes = {};
+
+  Object.keys(CLASS_INFO).forEach(category => {
+    const items = Object.values(grouped)
+      .filter(item => item.assetClass === category);
+
+    if (items.length) {
+      classes[category] = {
+        ...CLASS_INFO[category],
+        items
+      };
+    }
+  });
+
+  return classes;
+}
 
 /* ============ helpers ============ */
 const $ = s => document.querySelector(s);
@@ -397,86 +434,267 @@ function series(id,n,drift){const r=rng(hash(id));let v=50;const out=[];for(let 
   });
 })();
 
-/* ============ counters ============ */
-const total=Object.values(CLASSES).reduce((a,c)=>a+c.items.length,0);
-$('#instCount').dataset.count=total;
-function countUp(){
-  document.querySelectorAll('[data-count]').forEach(el=>{
-    const end=+el.dataset.count;const t0=performance.now();const d=1400;
-    (function f(now){const p=Math.min((now-t0)/d,1);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f);})(t0);
+
+/* ============ DYNAMIC COUNTERS + TICKER ============ */
+
+function updateStats() {
+  const categories = Object.keys(CLASSES);
+
+  const instrumentCount = Object.values(CLASSES)
+    .reduce((total, category) => total + category.items.length, 0);
+
+  const timeframeCount = new Set(
+    allProducts.map(product => product.timeframe)
+  ).size;
+
+  const counters = document.querySelectorAll('.stat b');
+
+  counters[0].dataset.count = categories.length;
+  counters[1].dataset.count = instrumentCount;
+  counters[2].dataset.count = timeframeCount;
+
+  $('#tickerTrack').innerHTML = '';
+
+  const tickerItems = allProducts.map(product => {
+    const item = document.createElement('span');
+    const symbol = document.createElement('b');
+
+    symbol.textContent = product.symbol || product.instrument;
+    item.appendChild(symbol);
+    item.appendChild(
+      document.createTextNode(
+        `${product.timeframe} · ${product.start_date || ''} — ${product.end_date || ''}`
+      )
+    );
+
+    return item;
+  });
+
+  tickerItems.forEach(item => {
+    $('#tickerTrack').appendChild(item.cloneNode(true));
+  });
+
+  tickerItems.forEach(item => {
+    $('#tickerTrack').appendChild(item.cloneNode(true));
+  });
+
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const end = Number(el.dataset.count);
+    const start = performance.now();
+    const duration = 1400;
+
+    function animate(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      el.textContent = Math.round(
+        end * (1 - Math.pow(1 - progress, 3))
+      );
+
+      if (progress < 1) requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
   });
 }
-setTimeout(countUp,1100);
 
-/* ============ ticker ============ */
-(function(){
-  const all=[];Object.values(CLASSES).forEach(c=>c.items.forEach(i=>all.push(i)));
-  const html=all.map(i=>`<span><b>${i.sym}</b>1D · 15m · 3m</span>`).join('');
-  $('#tickerTrack').innerHTML=html+html;
-})();
 
-/* ============ tabs + grid ============ */
-const tabs=$('#tabs'),pill=$('#pill'),grid=$('#grid'),note=$('#note');
-let current='indices';
-Object.entries(CLASSES).forEach(([k,c])=>{
-  const b=document.createElement('button');
-  b.className='tab';b.dataset.k=k;b.setAttribute('role','tab');
-  b.innerHTML=`${c.label}<sup>${c.items.length}</sup>`;
-  b.onclick=()=>select(k);
-  tabs.appendChild(b);
-});
-function movePill(){
-  const on=tabs.querySelector('.tab.on');if(!on)return;
-  pill.style.width=on.offsetWidth+'px';
-  pill.style.transform=`translateX(${on.offsetLeft-5}px)`;
+
+/* ============ DYNAMIC TABS + PRODUCT GRID ============ */
+
+const tabs = $('#tabs');
+const pill = $('#pill');
+const grid = $('#grid');
+const note = $('#note');
+
+function movePill() {
+  const on = tabs.querySelector('.tab.on');
+  if (!on) return;
+
+  pill.style.width = on.offsetWidth + 'px';
+  pill.style.transform =
+    `translateX(${on.offsetLeft - 5}px)`;
 }
-function setStep(n){['s1','s2','s3'].forEach((id,i)=>$('#'+id).classList.toggle('on',i<n));}
-function select(k){
-  current=k;
-  tabs.querySelectorAll('.tab').forEach(t=>{const on=t.dataset.k===k;t.classList.toggle('on',on);t.setAttribute('aria-selected',on);});
+
+function setStep(n) {
+  ['s1', 's2', 's3'].forEach((id, i) => {
+    $('#' + id).classList.toggle('on', i < n);
+  });
+}
+
+function select(k) {
+  if (!CLASSES[k]) return;
+
+  current = k;
+
+  tabs.querySelectorAll('.tab').forEach(tab => {
+    const selected = tab.dataset.k === k;
+    tab.classList.toggle('on', selected);
+    tab.setAttribute('aria-selected', String(selected));
+  });
+
   movePill();
-  const c=CLASSES[k];
-  note.style.opacity=0;setTimeout(()=>{note.textContent=c.note;note.style.transition='opacity .5s';note.style.opacity=1;},150);
+
+  note.style.opacity = 0;
+
+  setTimeout(() => {
+    note.textContent = CLASSES[k].note;
+    note.style.transition = 'opacity .5s';
+    note.style.opacity = 1;
+  }, 150);
+
   setStep(2);
-  render(c.items);
+  render(CLASSES[k].items);
 }
-const svgDefs=`<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efeee9" stop-opacity=".22"/><stop offset="1" stop-color="#efeee9" stop-opacity="0"/></linearGradient></defs>`;
-function sparkSVG(id){
-  const d=series(id,34,.9),min=Math.min(...d),max=Math.max(...d);
-  const pts=d.map((v,i)=>[i/(d.length-1)*120,40-((v-min)/(max-min||1))*36-2]);
-  const line='M'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' L');
-  const area=line+` L120,40 L0,40 Z`;
-  return `<svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none">${svgDefs}<path class="a" d="${area}"/><path class="l" d="${line}" pathLength="1" style="--len:1;stroke-dasharray:1;"/></svg>`;
+
+function buildTabs() {
+  tabs.querySelectorAll('.tab').forEach(tab => tab.remove());
+
+  Object.entries(CLASSES).forEach(([key, category]) => {
+    const button = document.createElement('button');
+
+    button.className = 'tab';
+    button.dataset.k = key;
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-selected', 'false');
+
+    const label = document.createElement('span');
+    label.textContent = category.label;
+
+    const count = document.createElement('sup');
+    count.textContent = category.items.length;
+
+    button.append(label, count);
+    button.addEventListener('click', () => select(key));
+
+    tabs.appendChild(button);
+  });
+
+  const firstCategory = CLASSES.indices
+    ? 'indices'
+    : Object.keys(CLASSES)[0];
+
+  if (firstCategory) select(firstCategory);
 }
-function render(items){
-  grid.innerHTML='';
-  items.forEach((it,i)=>{
-    const c=document.createElement('button');
-    c.className='card';c.style.animationDelay=(i*90)+'ms';
-    c.innerHTML=`
-      <div class="c-top"><span class="c-sym">${it.sym}</span><span class="c-arrow">→</span></div>
-      <div class="c-name">${it.name}</div>
-      <div class="c-sub">${CLASSES[current].label} · OHLC history</div>
-      ${sparkSVG(it.id)}
-      <div class="c-tf"><span>1D</span><span>15M</span><span>3M</span></div>`;
-    c.addEventListener('animationend',()=>c.classList.add('live'),{once:true});
-    c.addEventListener('pointermove',e=>{
-      const r=c.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;
-      c.style.setProperty('--mx',x+'px');c.style.setProperty('--my',y+'px');
-      if(!reduce&&c.classList.contains('live')){
-        c.style.setProperty('--ry',((x/r.width-.5)*10)+'deg');
-        c.style.setProperty('--rx',(-(y/r.height-.5)*10)+'deg');
+
+const svgDefs = `
+<defs>
+  <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#efeee9" stop-opacity=".22"/>
+    <stop offset="1" stop-color="#efeee9" stop-opacity="0"/>
+  </linearGradient>
+</defs>`;
+
+function sparkSVG(id) {
+  const d = series(id, 34, .9);
+  const min = Math.min(...d);
+  const max = Math.max(...d);
+
+  const pts = d.map((v, i) => [
+    i / (d.length - 1) * 120,
+    40 - ((v - min) / (max - min || 1)) * 36 - 2
+  ]);
+
+  const line = 'M' + pts.map(p =>
+    p[0].toFixed(1) + ',' + p[1].toFixed(1)
+  ).join(' L');
+
+  const area = line + ' L120,40 L0,40 Z';
+
+  return `<svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none">
+    ${svgDefs}
+    <path class="a" d="${area}"/>
+    <path class="l" d="${line}" pathLength="1"
+      style="--len:1;stroke-dasharray:1;"/>
+  </svg>`;
+}
+
+function render(items) {
+  grid.innerHTML = '';
+
+  if (!items.length) {
+    grid.textContent = 'No products available in this category yet.';
+    return;
+  }
+
+  items.forEach((item, index) => {
+    const card = document.createElement('button');
+
+    card.className = 'card';
+    card.style.animationDelay = (index * 90) + 'ms';
+
+    const top = document.createElement('div');
+    top.className = 'c-top';
+
+    const symbol = document.createElement('span');
+    symbol.className = 'c-sym';
+    symbol.textContent = item.sym;
+
+    const arrow = document.createElement('span');
+    arrow.className = 'c-arrow';
+    arrow.textContent = '→';
+
+    top.append(symbol, arrow);
+
+    const name = document.createElement('div');
+    name.className = 'c-name';
+    name.textContent = item.name;
+
+    const subtitle = document.createElement('div');
+    subtitle.className = 'c-sub';
+    subtitle.textContent = CLASSES[current].label + ' · OHLC history';
+
+    const spark = document.createElement('div');
+    spark.innerHTML = sparkSVG(item.id);
+
+    const timeframes = document.createElement('div');
+    timeframes.className = 'c-tf';
+
+    item.timeframes.forEach(tf => {
+      const chip = document.createElement('span');
+      chip.textContent = tf.label;
+      timeframes.appendChild(chip);
+    });
+
+    card.append(top, name, subtitle, spark, timeframes);
+
+    card.addEventListener('animationend', () => {
+      card.classList.add('live');
+    }, { once: true });
+
+    card.addEventListener('pointermove', event => {
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+
+      if (!reduce && card.classList.contains('live')) {
+        card.style.setProperty(
+          '--ry',
+          ((x / rect.width - .5) * 10) + 'deg'
+        );
+
+        card.style.setProperty(
+          '--rx',
+          (-(y / rect.height - .5) * 10) + 'deg'
+        );
       }
     });
-    c.addEventListener('pointerleave',()=>{c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg');});
-    c.onclick=()=>openModal(it);
-    grid.appendChild(c);
+
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+    });
+
+    card.addEventListener('click', () => openModal(item));
+
+    grid.appendChild(card);
   });
 }
 
 /* ============ modal ============ */
 const overlay=$('#overlay');
-let active=null,tfSel='1D',lastFocus=null,chartRAF=null;
+let lastFocus=null,chartRAF=null;
 function fileFor(it,tf){return (it.files&&it.files[tf])||`${FILE_BASE}${it.id}_${tf}.csv`;}
 function openModal(it){
   active=it;tfSel='1D';lastFocus=document.activeElement;
