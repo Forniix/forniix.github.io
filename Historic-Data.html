@@ -779,6 +779,29 @@ function openModal(it) {
   requestAnimationFrame(() => drawChart(it.id));
 }
 
+function closeModal() {
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+
+  cancelAnimationFrame(chartRAF);
+  setStep(2);
+
+  if (lastFocus) lastFocus.focus();
+}
+
+$('#mClose').addEventListener('click', closeModal);
+
+overlay.addEventListener('click', (event) => {
+  if (event.target === overlay) closeModal();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && overlay.classList.contains('open')) {
+    closeModal();
+  }
+});
+
 function updateFile() {
   if (!active) return;
 
