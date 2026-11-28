@@ -386,7 +386,8 @@ function groupProducts(rows) {
       price: Number(row.price),
       currency: row.currency || 'INR',
       startDate: row.start_date,
-      endDate: row.end_date
+      endDate: row.end_date,
+      storagePath: row.storage_path
     });
   });
 
@@ -802,13 +803,17 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+function isFree(tf) {
+  return !tf || Number(tf.price) === 0;
+}
+
 function updateFile() {
   if (!active) return;
 
   const tf = active.timeframes.find(item => item.id === tfSel);
   if (!tf) return;
 
-  dlText.textContent = 'BUY · ' + formatPrice(tf);
+  dlText.textContent = isFree(tf) ? 'DOWNLOAD FREE' : ('BUY · ' + formatPrice(tf));
 
   $('#fname').textContent =
     `${active.name} · ${tf.label} · ${tf.startDate || 'N/A'} — ${tf.endDate || 'N/A'}`;
@@ -822,7 +827,41 @@ function resetDl() {
 }
 
 dl.onclick = () => {
-  if (dl.classList.contains('busy')) return;
+  if (dl.classList.contains('busy') || !active) return;
+
+  const tf = active.timeframes.find(item => item.id === tfSel);
+  if (!tf) return;
+
+  if (isFree(tf)) {
+    dl.classList.add('busy');
+    dlText.textContent = 'PREPARING DOWNLOAD…';
+
+    fetch(`${SUPABASE_URL}/functions/v1/get-download-url`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      },
+      body: JSON.stringify({ product_id: tf.id })
+    })
+      .then(r => r.json())
+      .then(result => {
+        if (result.success && result.url) {
+          window.open(result.url, '_blank', 'noopener');
+        } else {
+          dlText.textContent = (result.error || 'DOWNLOAD UNAVAILABLE').toUpperCase();
+          setTimeout(updateFile, 2500);
+          return;
+        }
+        setTimeout(() => { dl.classList.remove('busy'); updateFile(); }, 600);
+      })
+      .catch(() => {
+        dlText.textContent = 'DOWNLOAD FAILED';
+        setTimeout(updateFile, 2500);
+      });
+    return;
+  }
 
   dl.classList.add('busy');
   dlText.textContent = 'CHECKOUT NOT CONFIGURED';
